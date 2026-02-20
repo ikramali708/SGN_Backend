@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SGN.Core\SGN.Core.csproj" />
+    <ProjectReference Include="..\SGN.Data\SGN.Data.csproj" />
+    <ProjectReference Include="..\SGN.Domain\SGN.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

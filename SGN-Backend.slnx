@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="SGN-Backend/SGN-Backend.csproj" />
+  <Project Path="SGN.Core/SGN.Core.csproj" />
+  <Project Path="SGN.Data/SGN.Data.csproj" />
+  <Project Path="SGN.Domain/SGN.Domain.csproj" />
+  <Project Path="SGN.IOC/SGN.IOC.csproj" />
+</Solution>

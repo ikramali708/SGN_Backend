@@ -1,0 +1,11 @@
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\bin\Debug\net10.0\SGN.Domain.deps.json
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\bin\Debug\net10.0\SGN.Domain.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\bin\Debug\net10.0\SGN.Domain.pdb
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\SGN.Domain.GeneratedMSBuildEditorConfig.editorconfig
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\SGN.Domain.AssemblyInfoInputs.cache
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\SGN.Domain.AssemblyInfo.cs
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\SGN.Domain.csproj.CoreCompileInputs.cache
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\SGN.Domain.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\refint\SGN.Domain.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\SGN.Domain.pdb
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Domain\obj\Debug\net10.0\ref\SGN.Domain.dll

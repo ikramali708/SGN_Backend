@@ -168,3 +168,4 @@ F:\BSCS\FYP\Project\SGN-Backend\SGN-Backend\obj\Debug\net10.0\refint\SGN-Backend
 F:\BSCS\FYP\Project\SGN-Backend\SGN-Backend\obj\Debug\net10.0\SGN-Backend.pdb
 F:\BSCS\FYP\Project\SGN-Backend\SGN-Backend\obj\Debug\net10.0\SGN-Backend.genruntimeconfig.cache
 F:\BSCS\FYP\Project\SGN-Backend\SGN-Backend\obj\Debug\net10.0\ref\SGN-Backend.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN-Backend\obj\Debug\net10.0\SGN-Backend.sourcelink.json

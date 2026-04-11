@@ -17,3 +17,4 @@ F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\refint\SGN.IOC.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.pdb
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\ref\SGN.IOC.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.sourcelink.json

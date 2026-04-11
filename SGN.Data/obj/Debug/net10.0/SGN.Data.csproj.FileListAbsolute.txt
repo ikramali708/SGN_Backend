@@ -15,3 +15,6 @@ F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\obj\Debug\net10.0\refint\SGN.Data.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\obj\Debug\net10.0\SGN.Data.pdb
 F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\obj\Debug\net10.0\SGN.Data.genruntimeconfig.cache
 F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\obj\Debug\net10.0\ref\SGN.Data.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\obj\Debug\net10.0\SGN.Data.sourcelink.json
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\bin\Debug\net10.0\SGN.Core.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Data\bin\Debug\net10.0\SGN.Core.pdb

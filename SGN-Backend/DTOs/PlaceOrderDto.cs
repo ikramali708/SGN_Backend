@@ -1,0 +1,14 @@
+namespace SGN_Backend.DTOs
+{
+    public class PlaceOrderDto
+    {
+        public string ShippingAddress { get; set; } = null!;
+        public List<PlaceOrderItemDto> Items { get; set; } = new();
+    }
+
+    public class PlaceOrderItemDto
+    {
+        public int PlantId { get; set; }
+        public int Quantity { get; set; }
+    }
+}

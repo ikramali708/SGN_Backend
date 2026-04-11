@@ -18,8 +18,25 @@ namespace SGN.Data.Repositories
 
         public async Task<Order?> GetByIdAsync(int id) => await _context.Orders.FindAsync(id);
 
+        public async Task<Order?> GetByIdWithItemsAsync(int id) =>
+            await _context.Orders
+                .Include(o => o.OrderItems!)
+                .ThenInclude(oi => oi.Plant)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
         public async Task<IEnumerable<Order>> GetByUserIdAsync(int userId) =>
-            await _context.Orders.Where(o => o.CustomerId == userId).ToListAsync();
+            await _context.Orders
+                .Where(o => o.CustomerId == userId)
+                .Include(o => o.OrderItems!)
+                .ThenInclude(oi => oi.Plant)
+                .ToListAsync();
+
+        public async Task<IEnumerable<Order>> GetByNurseryIdAsync(int nurseryId) =>
+            await _context.Orders
+                .Where(o => o.OrderItems!.Any(oi => oi.Plant != null && oi.Plant.NurseryId == nurseryId))
+                .Include(o => o.OrderItems!)
+                .ThenInclude(oi => oi.Plant)
+                .ToListAsync();
 
         public async Task<Order> AddAsync(Order order)
         {

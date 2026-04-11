@@ -13,3 +13,4 @@ F:\BSCS\FYP\Project\SGN-Backend\SGN.Core\obj\Debug\net10.0\SGN.Core.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.Core\obj\Debug\net10.0\refint\SGN.Core.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.Core\obj\Debug\net10.0\SGN.Core.pdb
 F:\BSCS\FYP\Project\SGN-Backend\SGN.Core\obj\Debug\net10.0\ref\SGN.Core.dll
+F:\BSCS\FYP\Project\SGN-Backend\SGN.Core\obj\Debug\net10.0\SGN.Core.sourcelink.json

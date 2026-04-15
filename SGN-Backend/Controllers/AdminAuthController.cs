@@ -32,7 +32,7 @@ public class AdminAuthController : ControllerBase
     public async Task<IActionResult> Login(UserLoginDto dto)
     {
         var user = await _userRepo.GetByEmailAsync(dto.Email);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+        if (user == null || user.Password != dto.Password)
             return Unauthorized("Invalid email or password");
 
         if (!string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))

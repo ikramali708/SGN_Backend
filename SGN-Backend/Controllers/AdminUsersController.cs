@@ -65,4 +65,18 @@ public class AdminUsersController : ControllerBase
 
         return Ok(AdminListHelper.ToPagedResult(items, p, ps, total));
     }
+
+    /// <summary>
+    /// Delete user account by id.
+    /// </summary>
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var user = await _userRepo.GetByIdAsync(id);
+        if (user == null)
+            return NotFound(new { message = "User not found." });
+
+        await _userRepo.DeleteAsync(id);
+        return Ok(new { message = "User deleted successfully.", userId = id });
+    }
 }

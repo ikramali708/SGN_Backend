@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "1IJx2VcygQg=",
+  "dgSpecHash": "u7uE46RWhyQ=",
   "success": true,
   "projectFilePath": "F:\\BSCS\\FYP\\Project\\SGN-Backend\\SGN.IOC\\SGN.IOC.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TCA\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\TCA\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
+    "C:\\Users\\TCA\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\TCA\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\10.0.3\\microsoft.aspnetcore.authentication.jwtbearer.10.0.3.nupkg.sha512",
     "C:\\Users\\TCA\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\TCA\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.4\\microsoft.bcl.cryptography.9.0.4.nupkg.sha512",
@@ -42,15 +43,5 @@
     "C:\\Users\\TCA\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\TCA\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.4\\system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
-      "projectPath": "F:\\BSCS\\FYP\\Project\\SGN-Backend\\SGN.IOC\\SGN.IOC.csproj",
-      "warningLevel": 1,
-      "filePath": "F:\\BSCS\\FYP\\Project\\SGN-Backend\\SGN.IOC\\SGN.IOC.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

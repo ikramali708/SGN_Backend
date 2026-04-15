@@ -1,3 +1,9 @@
+F:\BSCS\FYP\Project\SGN-Backend\.tmp-build-output\SGN.IOC.deps.json
+F:\BSCS\FYP\Project\SGN-Backend\.tmp-build-output\SGN.IOC.dll
+F:\BSCS\FYP\Project\SGN-Backend\.tmp-build-output\SGN.IOC.pdb
+F:\BSCS\FYP\Project\SGN-Backend\.tmp-run-output\SGN.IOC.deps.json
+F:\BSCS\FYP\Project\SGN-Backend\.tmp-run-output\SGN.IOC.dll
+F:\BSCS\FYP\Project\SGN-Backend\.tmp-run-output\SGN.IOC.pdb
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\bin\Debug\net10.0\SGN.IOC.deps.json
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\bin\Debug\net10.0\SGN.IOC.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\bin\Debug\net10.0\SGN.IOC.pdb
@@ -12,9 +18,9 @@ F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.GeneratedMSBui
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.AssemblyInfoInputs.cache
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.AssemblyInfo.cs
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.csproj.CoreCompileInputs.cache
+F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.sourcelink.json
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.csproj.Up2Date
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\refint\SGN.IOC.dll
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.pdb
 F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\ref\SGN.IOC.dll
-F:\BSCS\FYP\Project\SGN-Backend\SGN.IOC\obj\Debug\net10.0\SGN.IOC.sourcelink.json

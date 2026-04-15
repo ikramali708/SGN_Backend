@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SGN-Backend</name>
+    </assembly>
+    <members>
+        <member name="T:SGN_Backend.Controllers.AdminAuthController">
+            <summary>
+            Admin authentication.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminAuthController.Login(SGN_Backend.DTOs.UserLoginDto)">
+            <summary>
+            Login as admin and receive a JWT (role Admin)
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminCategoriesController">
+            <summary>
+            Admin plant categories.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminCategoriesController.GetCategories">
+            <summary>
+            List all categories
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminCategoriesController.GetById(System.Int32)">
+            <summary>
+            Get category by id
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminDashboardController">
+            <summary>
+            Admin dashboard aggregates and statistics.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminDashboardController.GetStats">
+            <summary>
+            Get overall admin dashboard stats
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminNurseriesController">
+            <summary>
+            Admin nursery approval and listing.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminNurseriesController.GetNurseries(System.String)">
+            <summary>
+            List all nurseries (optional search on name, owner, email, city, address)
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminNurseriesController.ApproveNursery(System.Int32)">
+            <summary>
+            Approve nursery registration request
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminNurseriesController.RejectNursery(System.Int32)">
+            <summary>
+            Reject nursery registration request
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminOrdersController">
+            <summary>
+            Admin order overview.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminOrdersController.GetOrders(System.String,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            List all orders with optional status filter, search, and pagination
+            </summary>
+            <param name="search">Matches order id, customer id, shipping address, payment or order status</param>
+            <param name="status">Filter by order status (e.g. Pending, Successful, Cancelled)</param>
+            <param name="page">1-based page index</param>
+            <param name="pageSize">Items per page (max 100)</param>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminOrdersController.GetById(System.Int32)">
+            <summary>
+            Get order by id (includes line items when loaded by repository)
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminPlantsController">
+            <summary>
+            Admin plant catalog management.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminPlantsController.GetPlants(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            List plants with optional category filter, search, and pagination
+            </summary>
+            <param name="search">Matches plant name or description</param>
+            <param name="categoryId">Filter by category</param>
+            <param name="page">1-based page index</param>
+            <param name="pageSize">Items per page (max 100)</param>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminPlantsController.GetById(System.Int32)">
+            <summary>
+            Get plant details by id
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminReportsController">
+            <summary>
+            Admin reporting aggregates.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminReportsController.GetReports">
+            <summary>
+            Basic aggregated metrics for admin reporting
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Controllers.AdminUsersController">
+            <summary>
+            Admin user management.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminUsersController.GetUsers(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Get registered users with optional search and pagination
+            </summary>
+            <param name="search">Matches name, email, or phone (case-insensitive)</param>
+            <param name="page">1-based page index</param>
+            <param name="pageSize">Items per page (max 100)</param>
+        </member>
+        <member name="M:SGN_Backend.Controllers.ContactMessageController.SendMessage(SGN.Domain.Entities.ContactMessage)">
+            <summary>
+            Send message to admin team
+            </summary>
+            <param name="message">Message details</param>
+            <returns>Saved message</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.ContactMessageController.GetMyMessages">
+            <summary>
+            Get current user message list
+            </summary>
+            <returns>List of user messages</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.OrderController.PlaceOrder(SGN_Backend.DTOs.PlaceOrderDto)">
+            <summary>
+            Place order with multiple plants
+            </summary>
+            <param name="dto">Order request</param>
+            <returns>Created order</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.OrderController.CancelOrder(System.Int32)">
+            <summary>
+            Cancel customer order by id
+            </summary>
+            <param name="id">Order ID</param>
+            <returns>Cancelled order</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.OrderController.GetMyOrders">
+            <summary>
+            Get logged in customer orders
+            </summary>
+            <returns>List of user orders</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.PlantController.GetById(System.Int32)">
+            <summary>
+            Get plant details by id
+            </summary>
+            <param name="id">Plant ID</param>
+            <returns>Plant details</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.Register(SGN_Backend.DTOs.UserRegisterDto)">
+            <summary>
+            Register new customer account
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.Login(SGN_Backend.DTOs.UserLoginDto)">
+            <summary>
+            Login user and return token
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.CustomerLogin(SGN_Backend.DTOs.UserLoginDto)">
+            <summary>
+            Login customer and return token
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.NurseryOwnerLogin(SGN_Backend.DTOs.UserLoginDto)">
+            <summary>
+            Login nursery owner and return token
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.GetById(System.Int32)">
+            <summary>
+            Get user profile by id
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.Update(System.Int32,SGN_Backend.DTOs.UserUpdateDto)">
+            <summary>
+            Update customer profile details
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.Delete(System.Int32)">
+            <summary>
+            Delete customer account by id
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.ChangePassword(System.Int32,SGN_Backend.DTOs.ChangePasswordDto)">
+            <summary>
+            Change customer account password
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.UserController.GetUserOrders(System.Int32)">
+            <summary>
+            Get orders for specific user
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.DTOs.PagedResultDto`1">
+            <summary>
+            Paginated list wrapper for admin list endpoints.
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Swagger.AdminTagOrderDocumentFilter">
+            <summary>
+            Ensures the ADMIN OpenAPI document lists tag groups in a stable, intentional order in Swagger UI.
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Swagger.NurseryTagOrderDocumentFilter">
+            <summary>
+            Ensures the NURSERY OpenAPI document lists tag groups in a stable order.
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>

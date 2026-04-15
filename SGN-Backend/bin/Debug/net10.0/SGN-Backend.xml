@@ -29,6 +29,21 @@
             Get category by id
             </summary>
         </member>
+        <member name="M:SGN_Backend.Controllers.AdminCategoriesController.CreateCategory(SGN_Backend.DTOs.CreateCategoryDto)">
+            <summary>
+            Create a new category.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminCategoriesController.UpdateCategory(System.Int32,SGN_Backend.DTOs.CreateCategoryDto)">
+            <summary>
+            Update category by id.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminCategoriesController.DeleteCategory(System.Int32)">
+            <summary>
+            Delete category by id.
+            </summary>
+        </member>
         <member name="T:SGN_Backend.Controllers.AdminDashboardController">
             <summary>
             Admin dashboard aggregates and statistics.
@@ -57,6 +72,11 @@
         <member name="M:SGN_Backend.Controllers.AdminNurseriesController.RejectNursery(System.Int32)">
             <summary>
             Reject nursery registration request
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminNurseriesController.DeleteNursery(System.Int32)">
+            <summary>
+            Delete nursery by id.
             </summary>
         </member>
         <member name="T:SGN_Backend.Controllers.AdminOrdersController">
@@ -120,6 +140,11 @@
             <param name="page">1-based page index</param>
             <param name="pageSize">Items per page (max 100)</param>
         </member>
+        <member name="M:SGN_Backend.Controllers.AdminUsersController.DeleteUser(System.Int32)">
+            <summary>
+            Delete user account by id.
+            </summary>
+        </member>
         <member name="M:SGN_Backend.Controllers.ContactMessageController.SendMessage(SGN.Domain.Entities.ContactMessage)">
             <summary>
             Send message to admin team
@@ -133,19 +158,49 @@
             </summary>
             <returns>List of user messages</returns>
         </member>
-        <member name="M:SGN_Backend.Controllers.NurseryController.Signup(SGN_Backend.DTOs.NurserySignupDto)">
+        <member name="M:SGN_Backend.Controllers.CustomerAuthController.Register(SGN.Core.Models.CustomerRegisterDto)">
             <summary>
-            Register new nursery owner account
+            Register a new customer account.
             </summary>
         </member>
-        <member name="M:SGN_Backend.Controllers.NurseryController.Login(SGN_Backend.DTOs.NurseryLoginDto)">
+        <member name="M:SGN_Backend.Controllers.CustomerAuthController.Login(SGN.Core.Models.CustomerLoginDto)">
             <summary>
-            Login nursery owner and check approval
+            Login as customer and receive JWT token.
             </summary>
         </member>
-        <member name="M:SGN_Backend.Controllers.NurseryDashboardController.GetStats">
+        <member name="M:SGN_Backend.Controllers.CustomerOrdersController.PlaceOrder(SGN.Core.Models.CustomerOrderCreateDto)">
             <summary>
-            Get nursery dashboard statistics
+            Place a new order for the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerOrdersController.GetMyOrders">
+            <summary>
+            Get all orders for the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerOrdersController.GetOrderById(System.Int32)">
+            <summary>
+            Get a specific order by id for the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerOrdersController.CancelOrder(System.Int32)">
+            <summary>
+            Cancel a pending order for the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerProfileController.GetProfile">
+            <summary>
+            Get profile details of the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerProfileController.UpdateProfile(SGN.Core.Models.CustomerProfileUpdateDto)">
+            <summary>
+            Update profile details of the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerProfileController.ChangePassword(SGN.Core.Models.CustomerChangePasswordDto)">
+            <summary>
+            Change password of the authenticated customer.
             </summary>
         </member>
         <member name="M:SGN_Backend.Controllers.OrderController.PlaceOrder(SGN_Backend.DTOs.PlaceOrderDto)">
@@ -168,22 +223,27 @@
             </summary>
             <returns>List of user orders</returns>
         </member>
-        <member name="M:SGN_Backend.Controllers.OrderController.GetOrdersForMyNursery">
-            <summary>
-            Get orders for owner nursery
-            </summary>
-        </member>
-        <member name="M:SGN_Backend.Controllers.OrderController.UpdateOrderStatus(System.Int32,SGN_Backend.DTOs.UpdateOrderStatusDto)">
-            <summary>
-            Update nursery order status
-            </summary>
-        </member>
         <member name="M:SGN_Backend.Controllers.PlantController.GetById(System.Int32)">
             <summary>
             Get plant details by id
             </summary>
             <param name="id">Plant ID</param>
             <returns>Plant details</returns>
+        </member>
+        <member name="M:SGN_Backend.Controllers.PlantsController.GetAll">
+            <summary>
+            Get all plants for customer browsing.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.PlantsController.GetById(System.Int32)">
+            <summary>
+            Get plant details by id for customer browsing.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.PlantsController.GetByCategory(System.Int32)">
+            <summary>
+            Get plants filtered by category id.
+            </summary>
         </member>
         <member name="M:SGN_Backend.Controllers.UserController.Register(SGN_Backend.DTOs.UserRegisterDto)">
             <summary>
@@ -238,6 +298,11 @@
         <member name="T:SGN_Backend.Swagger.AdminTagOrderDocumentFilter">
             <summary>
             Ensures the ADMIN OpenAPI document lists tag groups in a stable, intentional order in Swagger UI.
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.Swagger.NurseryTagOrderDocumentFilter">
+            <summary>
+            Ensures the NURSERY OpenAPI document lists tag groups in a stable order.
             </summary>
         </member>
         <member name="T:Program">

@@ -101,4 +101,18 @@ public class AdminNurseriesController : ControllerBase
             approvalStatus = nursery.ApprovalStatus
         });
     }
+
+    /// <summary>
+    /// Delete nursery by id.
+    /// </summary>
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteNursery(int id)
+    {
+        var nursery = await _nurseryRepo.GetByIdAsync(id);
+        if (nursery == null)
+            return NotFound(new { message = "Nursery not found." });
+
+        await _nurseryRepo.DeleteAsync(id);
+        return Ok(new { message = "Nursery deleted successfully.", nurseryId = id });
+    }
 }

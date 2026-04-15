@@ -1,58 +1,58 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SGN.Data.Context;
+using SGN.Domain.Interfaces;
+using SGN_Backend.DTOs;
 using System.Security.Claims;
 
-namespace SGN_Backend.Controllers
+namespace SGN_Backend.Controllers;
+
+[Route("api/nursery/dashboard")]
+[ApiController]
+[Authorize(Roles = "NurseryOwner")]
+[ApiExplorerSettings(GroupName = "NURSERY")]
+[Tags("Nursery Dashboard")]
+public class NurseryDashboardController : ControllerBase
 {
-    [Route("api/nursery/dashboard")]
-    [ApiController]
-    [Authorize(Roles = "NurseryOwner")]
-    public class NurseryDashboardController : ControllerBase
+    private readonly IPlantRepository _plantRepo;
+    private readonly IOrderRepository _orderRepo;
+
+    public NurseryDashboardController(IPlantRepository plantRepo, IOrderRepository orderRepo)
     {
-        private readonly NurseryDbContext _dbContext;
+        _plantRepo = plantRepo;
+        _orderRepo = orderRepo;
+    }
 
-        public NurseryDashboardController(NurseryDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetStats()
+    {
+        if (!TryGetNurseryId(out var nurseryId))
+            return Unauthorized("Invalid nursery token.");
 
-        /// <summary>
-        /// Get nursery dashboard statistics
-        /// </summary>
-        [HttpGet("stats")]
-        public async Task<IActionResult> GetStats()
-        {
-            var ownerEmail = User.FindFirstValue(ClaimTypes.Email);
-            if (string.IsNullOrWhiteSpace(ownerEmail))
-                return Unauthorized("Email claim is missing in token.");
+        var plants = await _plantRepo.GetAllAsync();
+        var nurseryPlantsCount = plants.Count(p => p.NurseryId == nurseryId);
 
-            var nursery = await _dbContext.Nurseries.FirstOrDefaultAsync(n => n.Email == ownerEmail);
-            if (nursery == null)
-                return NotFound("No nursery found for this owner.");
+        var orders = await _orderRepo.GetByNurseryIdAsync(nurseryId);
+        var orderList = orders.ToList();
+        var completedOrders = orderList.Where(o =>
+            string.Equals(o.OrderStatus, "Completed", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(o.OrderStatus, "Successful", StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
-            var nurseryId = nursery.NurseryId;
+        var dto = new NurseryDashboardResponseDto(
+            TotalPlants: nurseryPlantsCount,
+            TotalOrders: orderList.Count,
+            CompletedOrders: completedOrders.Count,
+            CancelledOrders: orderList.Count(o => string.Equals(o.OrderStatus, "Cancelled", StringComparison.OrdinalIgnoreCase)),
+            PendingOrders: orderList.Count(o => string.Equals(o.OrderStatus, "Pending", StringComparison.OrdinalIgnoreCase)),
+            TotalSales: completedOrders.Sum(o => o.TotalAmount)
+        );
 
-            var totalPlants = await _dbContext.Plants.CountAsync(p => p.NurseryId == nurseryId);
+        return Ok(dto);
+    }
 
-            var nurseryOrdersQuery = _dbContext.Orders.Where(o =>
-                o.OrderItems!.Any(oi => oi.Plant != null && oi.Plant.NurseryId == nurseryId));
-
-            var totalOrders = await nurseryOrdersQuery.CountAsync();
-            var completedOrders = await nurseryOrdersQuery.CountAsync(o => o.OrderStatus == "Successful");
-            var cancelledOrders = await nurseryOrdersQuery.CountAsync(o => o.OrderStatus == "Cancelled");
-            var pendingOrders = await nurseryOrdersQuery.CountAsync(o => o.OrderStatus == "Pending");
-
-            return Ok(new
-            {
-                nurseryId,
-                totalPlants,
-                totalOrders,
-                completedOrders,
-                cancelledOrders,
-                pendingOrders
-            });
-        }
+    private bool TryGetNurseryId(out int nurseryId)
+    {
+        var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(claimValue, out nurseryId);
     }
 }

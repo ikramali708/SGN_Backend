@@ -21,21 +21,27 @@ namespace SGN.Data.Services
         {
             var jwtSettings = _configuration.GetSection("Jwt");
             var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT key is missing.");
+            var issuer = jwtSettings["Issuer"] ?? throw new InvalidOperationException("JWT Issuer is missing.");
+            var audience = jwtSettings["Audience"] ?? throw new InvalidOperationException("JWT Audience is missing.");
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var role = string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase)
+                ? "Admin"
+                : user.Role;
 
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, role)
             };
 
             var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"],
-                audience: jwtSettings["Audience"],
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials

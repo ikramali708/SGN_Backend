@@ -2,14 +2,27 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { isTokenExpired, normalizeRole, parseJwtPayload } from '../auth/token.js';
 
-export default function ProtectedRoute({ children, allowedRoles = [] }) {
+export default function ProtectedRoute({
+  children,
+  allowedRoles = [],
+  role: requiredRole,
+}) {
   const location = useLocation();
   const { token, role } = useAuth();
   const normalizedRole = normalizeRole(role);
-  const normalizedAllowedRoles = allowedRoles.map((r) => normalizeRole(r));
+  const effectiveAllowed =
+    allowedRoles.length > 0
+      ? allowedRoles
+      : requiredRole
+        ? [requiredRole]
+        : [];
+  const normalizedAllowedRoles = effectiveAllowed.map((r) => normalizeRole(r));
 
   if (!token || !parseJwtPayload(token) || isTokenExpired(token)) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    const redirect = encodeURIComponent(
+      `${location.pathname}${location.search}`
+    );
+    return <Navigate to={`/login?redirect=${redirect}`} replace />;
   }
 
   if (
@@ -22,7 +35,13 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
     if (normalizedRole === 'NurseryOwner') {
       return <Navigate to="/nursery/dashboard" replace />;
     }
-    return <Navigate to="/login" replace />;
+    if (normalizedRole === 'Customer') {
+      return <Navigate to="/customer/home" replace />;
+    }
+    const redirect = encodeURIComponent(
+      `${location.pathname}${location.search}`
+    );
+    return <Navigate to={`/login?redirect=${redirect}`} replace />;
   }
 
   return children;

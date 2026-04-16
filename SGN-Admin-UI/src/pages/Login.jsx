@@ -1,16 +1,19 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 import { useAuth } from '../auth/AuthContext.jsx';
 import {
   tokenHasAdminRole,
+  tokenHasCustomerRole,
   tokenHasNurseryRole,
   tokenUserId,
 } from '../auth/token.js';
 import Spinner from '../components/Spinner.jsx';
+import { pathAfterLogin } from '../utils/postLoginRedirect.js';
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [role, setRole] = useState('Admin');
   const [authTab, setAuthTab] = useState('login');
@@ -37,11 +40,13 @@ export default function Login() {
       const endpoint =
         role === 'Admin'
           ? '/api/admin/auth/login'
-          : authTab === 'signup'
-            ? '/api/nursery/auth/signup'
-            : '/api/nursery/auth/login';
+          : role === 'Customer'
+            ? '/api/customer/auth/login'
+            : authTab === 'signup'
+              ? '/api/nursery/auth/signup'
+              : '/api/nursery/auth/login';
       const payload =
-        role === 'Admin'
+        role === 'Admin' || role === 'Customer'
           ? {
               email: form.email,
               password: form.password,
@@ -73,17 +78,26 @@ export default function Login() {
         setError('This account is not authorized for nursery access.');
         return;
       }
+      if (role === 'Customer' && !tokenHasCustomerRole(token)) {
+        setError('This account is not authorized for customer access.');
+        return;
+      }
       const userId =
         data?.userId ??
+        data?.UserId ??
         data?.id ??
         data?.nurseryId ??
         data?.adminId ??
         tokenUserId(token);
-      login(token, role, userId);
-      navigate(
-        role === 'Admin' ? '/admin/dashboard' : '/nursery/dashboard',
-        { replace: true }
-      );
+      const resolvedRole =
+        role === 'Customer'
+          ? data?.role ?? data?.Role ?? 'Customer'
+          : role;
+      login(token, resolvedRole, userId);
+      const params = new URLSearchParams(location.search);
+      const redirectParam = params.get('redirect');
+      const next = pathAfterLogin(resolvedRole, redirectParam);
+      navigate(next, { replace: true });
     } catch (err) {
       const msg =
         err.response?.data &&
@@ -102,7 +116,7 @@ export default function Login() {
     <div className="relative flex min-h-screen items-center justify-center bg-surface px-4 py-12">
       <div className="absolute left-4 top-4 sm:left-6 sm:top-6">
         <div className="rounded-lg border border-primary/30 bg-white p-1 shadow">
-          {['Admin', 'NurseryOwner'].map((r) => (
+          {['Admin', 'NurseryOwner', 'Customer'].map((r) => (
             <button
               key={r}
               type="button"
@@ -118,20 +132,40 @@ export default function Login() {
                   : 'text-primary hover:bg-primary/10',
               ].join(' ')}
             >
-              {r === 'NurseryOwner' ? 'Nursery Owner' : 'Admin'}
+              {r === 'NurseryOwner'
+                ? 'Nursery Owner'
+                : r === 'Customer'
+                  ? 'Customer'
+                  : 'Admin'}
             </button>
           ))}
         </div>
       </div>
       <div className="w-full max-w-md rounded-2xl border-2 border-primary/35 bg-white p-8 shadow-lg">
         <h1 className="text-center text-2xl font-bold text-primary">
-          {role === 'Admin' ? 'SGN Admin Login' : 'SGN Nursery Access'}
+          {role === 'Admin'
+            ? 'SGN Admin Login'
+            : role === 'Customer'
+              ? 'SGN Customer Login'
+              : 'SGN Nursery Access'}
         </h1>
         <p className="mt-2 text-center text-sm text-slate-500">
           {role === 'Admin'
             ? 'Sign in with your admin credentials'
-            : 'Login or sign up to manage your nursery'}
+            : role === 'Customer'
+              ? 'Sign in to browse plants and track your orders'
+              : 'Login or sign up to manage your nursery'}
         </p>
+        {role === 'Customer' && (
+          <div className="mt-5 text-center">
+            <Link
+              to="/customer/signup"
+              className="inline-flex rounded-lg border-2 border-primary px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10"
+            >
+              Create account
+            </Link>
+          </div>
+        )}
         {role === 'NurseryOwner' && (
           <div className="mt-5 grid grid-cols-2 rounded-lg border border-primary/25 p-1">
             <button

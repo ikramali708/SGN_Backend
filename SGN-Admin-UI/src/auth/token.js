@@ -67,6 +67,7 @@ export function normalizeRole(role) {
   if (normalized === 'nurseryowner') {
     return 'NurseryOwner';
   }
+  if (normalized === 'customer') return 'Customer';
   return '';
 }
 
@@ -108,9 +109,20 @@ export function tokenHasNurseryRole(token) {
   return normalizeRole(r) === 'NurseryOwner';
 }
 
+export function tokenHasCustomerRole(token) {
+  const p = parseJwtPayload(token);
+  if (!p) return false;
+  const r = p.role ?? p[ROLE_CLAIM] ?? p.Role;
+  if (Array.isArray(r)) {
+    return r.some((x) => normalizeRole(x) === 'Customer');
+  }
+  return normalizeRole(r) === 'Customer';
+}
+
 export function tokenRole(token) {
   if (tokenHasAdminRole(token)) return 'Admin';
   if (tokenHasNurseryRole(token)) return 'NurseryOwner';
+  if (tokenHasCustomerRole(token)) return 'Customer';
   return '';
 }
 

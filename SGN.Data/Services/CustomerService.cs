@@ -181,7 +181,8 @@ public class CustomerService : ICustomerService
     public async Task<(bool Success, int StatusCode, object Response)> GetOrdersAsync(int userId)
     {
         var orders = await _orderRepo.GetByUserIdAsync(userId);
-        return (true, 200, orders);
+        var list = orders.Select(MapOrderToDto).OrderByDescending(o => o.OrderDate).ToList();
+        return (true, 200, list);
     }
 
     public async Task<(bool Success, int StatusCode, object Response)> GetOrderByIdAsync(int userId, int orderId)
@@ -191,7 +192,28 @@ public class CustomerService : ICustomerService
             return (false, 404, new { message = "Order not found." });
         if (order.CustomerId != userId)
             return (false, 401, new { message = "You can only view your own orders." });
-        return (true, 200, order);
+        return (true, 200, MapOrderToDto(order));
+    }
+
+    private static CustomerOrderResponseDto MapOrderToDto(Order order)
+    {
+        return new CustomerOrderResponseDto
+        {
+            OrderId = order.OrderId,
+            CustomerId = order.CustomerId,
+            TotalAmount = order.TotalAmount,
+            OrderStatus = order.OrderStatus,
+            PaymentStatus = order.PaymentStatus,
+            ShippingAddress = order.ShippingAddress,
+            OrderDate = order.OrderDate,
+            OrderItems = (order.OrderItems ?? Enumerable.Empty<OrderItem>())
+                .Select(i => new CustomerOrderItemResponseDto
+                {
+                    PlantId = i.PlantId,
+                    Quantity = i.Quantity,
+                    PriceAtTime = i.PriceAtTime
+                }).ToList()
+        };
     }
 
     public async Task<(bool Success, int StatusCode, object Response)> CancelOrderAsync(int userId, int orderId)

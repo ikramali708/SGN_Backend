@@ -230,6 +230,11 @@
             <param name="id">Plant ID</param>
             <returns>Plant details</returns>
         </member>
+        <member name="M:SGN_Backend.Controllers.PlantDiseaseController.Detect(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+            <summary>
+            Upload a leaf image for disease detection (proxied to the ML service).
+            </summary>
+        </member>
         <member name="M:SGN_Backend.Controllers.PlantsController.GetAll">
             <summary>
             Get all plants for customer browsing.
@@ -293,6 +298,17 @@
         <member name="T:SGN_Backend.DTOs.PagedResultDto`1">
             <summary>
             Paginated list wrapper for admin list endpoints.
+            </summary>
+        </member>
+        <member name="T:SGN_Backend.DTOs.MlPredictResponseDto">
+            <summary>JSON shape returned by the FastAPI /predict endpoint.</summary>
+        </member>
+        <member name="T:SGN_Backend.DTOs.PlantDiseaseDetectResponseDto">
+            <summary>API response for plant disease detection including agronomic guidance.</summary>
+        </member>
+        <member name="T:SGN_Backend.Services.PlantDiseaseRecommendations">
+            <summary>
+            Maps PlantVillage-style class labels to concise treatment and prevention guidance (informational, not a substitute for professional diagnosis).
             </summary>
         </member>
         <member name="T:SGN_Backend.Swagger.AdminTagOrderDocumentFilter">

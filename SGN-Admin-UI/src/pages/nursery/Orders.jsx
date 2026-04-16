@@ -11,7 +11,7 @@ const columns = [
   { key: 'status', label: 'Status' },
 ];
 
-const statusOptions = ['Pending', 'Successful', 'Cancelled'];
+const statusOptions = ['Pending', 'Completed', 'Cancelled'];
 
 export default function NurseryOrders() {
   const [items, setItems] = useState([]);
@@ -39,7 +39,7 @@ export default function NurseryOrders() {
 
   async function updateStatus(orderId, orderStatus) {
     try {
-      await api.patch(`/api/nursery/orders/${orderId}/status`, { orderStatus });
+      await api.put(`/api/nursery/orders/${orderId}/status`, { status: orderStatus });
       setItems((prev) =>
         prev.map((o) => (o.orderId === orderId ? { ...o, orderStatus } : o))
       );

@@ -19,6 +19,15 @@ builder.Services.AddDbContext<NurseryDbContext>(options =>
 // Add controllers
 builder.Services.AddControllers();
 
+var mlServiceBase = builder.Configuration["MlService:BaseUrl"] ?? "http://127.0.0.1:8000";
+if (!mlServiceBase.EndsWith('/'))
+    mlServiceBase += "/";
+builder.Services.AddHttpClient("PlantDiseaseMl", client =>
+{
+    client.BaseAddress = new Uri(mlServiceBase);
+    client.Timeout = TimeSpan.FromMinutes(3);
+});
+
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key is missing in configuration.");

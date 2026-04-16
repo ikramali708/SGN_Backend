@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { clearToken, getToken, isTokenExpired } from '../auth/token.js';
+import { clearToken, getToken } from '../auth/token.js';
 
 const baseURL = import.meta.env.VITE_API_URL?.trim() || '';
 
@@ -31,23 +31,19 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      const token = getToken();
-      const responseMessage = String(
-        err.response?.data?.message ||
-          err.response?.data?.title ||
-          err.response?.data ||
-          ''
-      ).toLowerCase();
-      const clearlyInvalidToken =
-        responseMessage.includes('token') &&
-        (responseMessage.includes('expired') ||
-          responseMessage.includes('invalid') ||
-          responseMessage.includes('signature'));
-
-      if (token && (isTokenExpired(token) || clearlyInvalidToken)) {
+      const hadAuth = Boolean(
+        err.config?.headers?.Authorization || err.config?.headers?.authorization
+      );
+      if (hadAuth) {
         clearToken();
-        if (!window.location.pathname.startsWith('/login')) {
-          window.location.assign('/login');
+        const path = window.location.pathname;
+        const search = window.location.search || '';
+        if (
+          !path.startsWith('/login') &&
+          !path.startsWith('/customer/signup')
+        ) {
+          const redirect = encodeURIComponent(`${path}${search}`);
+          window.location.assign(`/login?redirect=${redirect}`);
         }
       }
     }

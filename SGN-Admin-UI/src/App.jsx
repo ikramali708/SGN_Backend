@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AdminLayout from './layouts/AdminLayout.jsx';
 import Login from './pages/Login.jsx';
@@ -14,6 +14,17 @@ import NurseryPlants from './pages/nursery/Plants.jsx';
 import NurseryInventory from './pages/nursery/Inventory.jsx';
 import NurseryOrders from './pages/nursery/Orders.jsx';
 import NurseryProfile from './pages/nursery/Profile.jsx';
+import CustomerShopRoot from './layouts/CustomerShopRoot.jsx';
+import CustomerPublicLayout from './layouts/CustomerPublicLayout.jsx';
+import CustomerAccountLayout from './layouts/CustomerAccountLayout.jsx';
+import CustomerSignup from './pages/CustomerSignup.jsx';
+import CustomerHome from './pages/customer/Home.jsx';
+import CustomerPlants from './pages/customer/Plants.jsx';
+import CustomerPlantDetail from './pages/customer/PlantDetail.jsx';
+import CustomerOrders from './pages/customer/Orders.jsx';
+import CustomerCancelledOrders from './pages/customer/CancelledOrders.jsx';
+import CustomerProfile from './pages/customer/Profile.jsx';
+import PlantDiseaseDetector from './pages/customer/PlantDiseaseDetector.jsx';
 import { useAuth } from './auth/AuthContext.jsx';
 import { isTokenExpired, normalizeRole } from './auth/token.js';
 
@@ -25,6 +36,9 @@ function LoginGate() {
   }
   if (token && !isTokenExpired(token) && normalizedRole === 'NurseryOwner') {
     return <Navigate to="/nursery/dashboard" replace />;
+  }
+  if (token && !isTokenExpired(token) && normalizedRole === 'Customer') {
+    return <Navigate to="/customer/home" replace />;
   }
   return <Login />;
 }
@@ -38,13 +52,17 @@ function CatchAll() {
   if (token && !isTokenExpired(token) && normalizedRole === 'NurseryOwner') {
     return <Navigate to="/nursery/dashboard" replace />;
   }
-  return <Navigate to="/login" replace />;
+  if (token && !isTokenExpired(token) && normalizedRole === 'Customer') {
+    return <Navigate to="/customer/home" replace />;
+  }
+  return <Navigate to="/customer/home" replace />;
 }
 
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginGate />} />
+      <Route path="/customer/signup" element={<CustomerSignup />} />
       <Route
         path="/admin"
         element={
@@ -76,6 +94,36 @@ export default function App() {
         <Route path="inventory" element={<NurseryInventory />} />
         <Route path="orders" element={<NurseryOrders />} />
         <Route path="profile" element={<NurseryProfile />} />
+      </Route>
+      <Route
+        path="/customer/orders"
+        element={<Navigate to="/customer/account/orders" replace />}
+      />
+      <Route
+        path="/customer/profile"
+        element={<Navigate to="/customer/account/profile" replace />}
+      />
+      <Route path="/customer" element={<CustomerShopRoot />}>
+        <Route element={<CustomerPublicLayout />}>
+          <Route index element={<Navigate to="home" replace />} />
+          <Route path="home" element={<CustomerHome />} />
+          <Route path="plants" element={<CustomerPlants />} />
+          <Route path="plants/:id" element={<CustomerPlantDetail />} />
+        </Route>
+        <Route
+          path="account"
+          element={
+            <ProtectedRoute role="Customer">
+              <CustomerAccountLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="profile" replace />} />
+          <Route path="profile" element={<CustomerProfile />} />
+          <Route path="plant-disease" element={<PlantDiseaseDetector />} />
+          <Route path="orders" element={<CustomerOrders />} />
+          <Route path="cancelled" element={<CustomerCancelledOrders />} />
+        </Route>
       </Route>
       <Route path="/" element={<CatchAll />} />
       <Route path="*" element={<CatchAll />} />

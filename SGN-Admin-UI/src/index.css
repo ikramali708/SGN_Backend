@@ -5,3 +5,92 @@
 body {
   @apply font-sans antialiased text-slate-800 bg-surface;
 }
+
+/* Customer storefront: theme polish (scoped — admin/nursery unaffected) */
+.customer-app {
+  --shop-transition: all 0.3s ease;
+  --brand-primary: #2e7d32;
+  --brand-primary-hover: #1b5e20;
+  --brand-accent: #81c784;
+  color: #1a1a1a;
+}
+
+/* Softer page backdrop */
+.customer-app.min-h-screen {
+  background-color: #f5faf5;
+}
+
+/* Navbar: clean white / mint wash */
+.customer-app header[class*='sticky'] {
+  background-color: rgba(255, 255, 255, 0.97) !important;
+  border-color: #e8f5e9 !important;
+  box-shadow: 0 1px 0 rgba(46, 125, 50, 0.06), 0 8px 24px -12px rgba(46, 125, 50, 0.08);
+}
+
+.customer-app header a.text-brand,
+.customer-app header .text-brand {
+  color: var(--brand-primary);
+  letter-spacing: -0.02em;
+}
+
+.customer-app header a.text-brand:hover {
+  color: var(--brand-primary-hover);
+}
+
+.customer-app header button.rounded-full:hover,
+.customer-app header a.rounded-full:hover {
+  background-color: #edf7ed !important;
+}
+
+/* Primary solid buttons: darker green on hover (utility uses hover:bg-brand-light) */
+.customer-app .bg-brand.hover\:bg-brand-light:hover {
+  background-color: var(--brand-primary-hover) !important;
+}
+
+/* Links / outline that use hover:bg-brand-surface */
+.customer-app .hover\:bg-brand-surface:hover {
+  background-color: #edf7ed !important;
+}
+
+.customer-app .shop-fade-in {
+  animation: shopFadeIn 0.45s ease forwards;
+}
+
+.customer-app .shop-slide-up {
+  animation: shopSlideUp 0.5s ease forwards;
+}
+
+@keyframes shopFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shopSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shopToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shop-toast-item {
+  animation: shopToastIn 0.3s ease;
+}

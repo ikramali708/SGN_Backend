@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SGN.Core.Interfaces;
 using SGN.Core.Models;
+using SGN.Core.Security;
 using SGN.Data.Context;
 using SGN.Domain.Entities;
 using SGN.Domain.Interfaces;
@@ -31,6 +32,10 @@ public class CustomerService : ICustomerService
 
     public async Task<(bool Success, int StatusCode, object Response)> RegisterAsync(CustomerRegisterDto dto)
     {
+        if (!string.IsNullOrWhiteSpace(dto.Role) &&
+            !string.Equals(dto.Role, "Customer", StringComparison.OrdinalIgnoreCase))
+            return (false, 400, new { message = "Invalid registration." });
+
         var existing = await _userRepo.GetByEmailAsync(dto.Email);
         if (existing != null)
             return (false, 400, new { message = "Email already exists." });
@@ -52,7 +57,7 @@ public class CustomerService : ICustomerService
     public async Task<(bool Success, int StatusCode, object Response)> LoginAsync(CustomerLoginDto dto)
     {
         var user = await _userRepo.GetByEmailAsync(dto.Email);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+        if (user == null || !PasswordVerification.SafeVerify(dto.Password, user.Password))
             return (false, 401, new { message = "Invalid email or password." });
         if (!string.Equals(user.Role, "Customer", StringComparison.OrdinalIgnoreCase))
             return (false, 401, new { message = "This account is not authorized for customer login." });
@@ -98,7 +103,7 @@ public class CustomerService : ICustomerService
         var user = await _userRepo.GetByIdAsync(userId);
         if (user == null)
             return (false, 404, new { message = "User not found." });
-        if (!BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.Password))
+        if (!PasswordVerification.SafeVerify(dto.OldPassword, user.Password))
             return (false, 400, new { message = "Old password is incorrect." });
         user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
         await _userRepo.UpdateAsync(user);

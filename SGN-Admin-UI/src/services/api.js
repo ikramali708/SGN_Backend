@@ -40,7 +40,8 @@ api.interceptors.response.use(
         const search = window.location.search || '';
         if (
           !path.startsWith('/login') &&
-          !path.startsWith('/customer/signup')
+          !path.startsWith('/customer/signup') &&
+          !path.startsWith('/nursery/signup')
         ) {
           const redirect = encodeURIComponent(`${path}${search}`);
           window.location.assign(`/login?redirect=${redirect}`);

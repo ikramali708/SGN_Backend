@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SGN.Core.Security;
 using SGN.Domain.Interfaces;
 using SGN_Backend.DTOs;
 using System.Security.Claims;
@@ -81,8 +82,7 @@ public class NurseryProfileController : ControllerBase
         if (nursery == null)
             return NotFound("Nursery not found.");
 
-        var oldPasswordMatches = BCrypt.Net.BCrypt.Verify(dto.OldPassword, nursery.Password) || nursery.Password == dto.OldPassword;
-        if (!oldPasswordMatches)
+        if (!PasswordVerification.SafeVerify(dto.OldPassword, nursery.Password))
             return Unauthorized("Old password is incorrect.");
 
         nursery.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);

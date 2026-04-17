@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGN.Core.Interfaces;
+using SGN.Core.Security;
 using SGN.Domain.Entities;
 using SGN.Domain.Interfaces;
 using SGN_Backend.DTOs;
@@ -26,6 +27,9 @@ public class NurseryAuthController : ControllerBase
     [HttpPost("signup")]
     public async Task<IActionResult> Signup([FromBody] NurseryOwnerSignupDto dto)
     {
+        if (string.Equals(dto.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+            return BadRequest("Invalid registration.");
+
         var existing = await _nurseryRepo.GetByEmailAsync(dto.Email);
         if (existing != null)
             return BadRequest("Nursery with this email already exists.");
@@ -36,8 +40,8 @@ public class NurseryAuthController : ControllerBase
             OwnerName = dto.OwnerName,
             Email = dto.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Phone = string.Empty,
-            Address = string.Empty,
+            Phone = (dto.Phone ?? string.Empty).Trim(),
+            Address = (dto.Address ?? string.Empty).Trim(),
             City = string.Empty,
             ApprovalStatus = "Pending",
             Status = "Active",
@@ -60,7 +64,7 @@ public class NurseryAuthController : ControllerBase
         if (nursery == null)
             return Unauthorized("Invalid email or password.");
 
-        var passwordMatches = BCrypt.Net.BCrypt.Verify(dto.Password, nursery.Password) || nursery.Password == dto.Password;
+        var passwordMatches = PasswordVerification.SafeVerify(dto.Password, nursery.Password);
         if (!passwordMatches)
             return Unauthorized("Invalid email or password.");
 

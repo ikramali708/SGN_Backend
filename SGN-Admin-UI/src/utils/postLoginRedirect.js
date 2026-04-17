@@ -37,13 +37,13 @@ export function pathAfterLogin(role, redirectParam) {
   if (path && normalized === 'Customer' && path.startsWith('/customer')) {
     return path;
   }
-  if (normalized === 'Admin') return '/admin/dashboard';
-  if (normalized === 'NurseryOwner') return '/nursery/dashboard';
-  if (normalized === 'Customer') return '/customer/home';
-  return '/customer/home';
+  if (normalized === 'Admin') return '/admin-dashboard';
+  if (normalized === 'NurseryOwner') return '/nursery-dashboard';
+  if (normalized === 'Customer') return '/customer-dashboard';
+  return '/customer-dashboard';
 }
 
 export function loginUrlWithRedirect(pathname, search = '') {
-  const full = `${pathname || '/customer/home'}${search || ''}`;
+  const full = `${pathname || '/customer-dashboard'}${search || ''}`;
   return `/login?redirect=${encodeURIComponent(full)}`;
 }

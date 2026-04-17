@@ -30,13 +30,13 @@ export default function ProtectedRoute({
     !normalizedAllowedRoles.includes(normalizedRole)
   ) {
     if (normalizedRole === 'Admin') {
-      return <Navigate to="/admin/dashboard" replace />;
+      return <Navigate to="/admin-dashboard" replace />;
     }
     if (normalizedRole === 'NurseryOwner') {
-      return <Navigate to="/nursery/dashboard" replace />;
+      return <Navigate to="/nursery-dashboard" replace />;
     }
     if (normalizedRole === 'Customer') {
-      return <Navigate to="/customer/home" replace />;
+      return <Navigate to="/customer-dashboard" replace />;
     }
     const redirect = encodeURIComponent(
       `${location.pathname}${location.search}`

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SGN-Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c65d40304eddc682309258ba8688dacaded1b92")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a176f472536d1c0ba75db217c3034593448769e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SGN-Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SGN-Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

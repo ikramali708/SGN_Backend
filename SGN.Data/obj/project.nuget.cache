@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ZJwZYe8xTDM=",
+  "dgSpecHash": "Hn69y6flUJw=",
   "success": true,
   "projectFilePath": "F:\\BSCS\\FYP\\Project\\SGN-Backend\\SGN.Data\\SGN.Data.csproj",
   "expectedPackageFiles": [
@@ -64,5 +64,15 @@
     "C:\\Users\\TCA\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\TCA\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.4\\system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "F:\\BSCS\\FYP\\Project\\SGN-Backend\\SGN.Data\\SGN.Data.csproj",
+      "warningLevel": 1,
+      "filePath": "F:\\BSCS\\FYP\\Project\\SGN-Backend\\SGN.Data\\SGN.Data.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

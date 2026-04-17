@@ -6,6 +6,7 @@ import {
   loginUrlWithRedirect,
 } from '../../utils/postLoginRedirect.js';
 import { useCart } from '../../contexts/CartContext.jsx';
+import logoUrl from '../../assets/Logo.png';
 
 function IconCart({ className }) {
   return (
@@ -100,9 +101,15 @@ export default function CustomerShopHeader({ variant = 'public' }) {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <div className="flex items-center justify-between gap-3 lg:justify-start">
             <Link
-              to="/customer/home"
-              className="text-lg font-bold tracking-tight text-brand sm:text-xl"
+              to="/customer-dashboard"
+              className="flex items-center text-lg font-bold tracking-tight text-brand sm:text-xl"
             >
+              <img
+                src={logoUrl}
+                alt=""
+                className="mr-2 h-20 w-auto shrink-0 object-contain"
+                aria-hidden
+              />
               Smart Green Nursery
             </Link>
             <div className="flex items-center gap-1 sm:gap-2 lg:hidden">

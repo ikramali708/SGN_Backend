@@ -18,6 +18,7 @@ import CustomerShopRoot from './layouts/CustomerShopRoot.jsx';
 import CustomerPublicLayout from './layouts/CustomerPublicLayout.jsx';
 import CustomerAccountLayout from './layouts/CustomerAccountLayout.jsx';
 import CustomerSignup from './pages/CustomerSignup.jsx';
+import NurserySignup from './pages/NurserySignup.jsx';
 import CustomerHome from './pages/customer/Home.jsx';
 import CustomerPlants from './pages/customer/Plants.jsx';
 import CustomerPlantDetail from './pages/customer/PlantDetail.jsx';
@@ -32,13 +33,13 @@ function LoginGate() {
   const { token, role } = useAuth();
   const normalizedRole = normalizeRole(role);
   if (token && !isTokenExpired(token) && normalizedRole === 'Admin') {
-    return <Navigate to="/admin/dashboard" replace />;
+    return <Navigate to="/admin-dashboard" replace />;
   }
   if (token && !isTokenExpired(token) && normalizedRole === 'NurseryOwner') {
-    return <Navigate to="/nursery/dashboard" replace />;
+    return <Navigate to="/nursery-dashboard" replace />;
   }
   if (token && !isTokenExpired(token) && normalizedRole === 'Customer') {
-    return <Navigate to="/customer/home" replace />;
+    return <Navigate to="/customer-dashboard" replace />;
   }
   return <Login />;
 }
@@ -47,22 +48,35 @@ function CatchAll() {
   const { token, role } = useAuth();
   const normalizedRole = normalizeRole(role);
   if (token && !isTokenExpired(token) && normalizedRole === 'Admin') {
-    return <Navigate to="/admin/dashboard" replace />;
+    return <Navigate to="/admin-dashboard" replace />;
   }
   if (token && !isTokenExpired(token) && normalizedRole === 'NurseryOwner') {
-    return <Navigate to="/nursery/dashboard" replace />;
+    return <Navigate to="/nursery-dashboard" replace />;
   }
   if (token && !isTokenExpired(token) && normalizedRole === 'Customer') {
-    return <Navigate to="/customer/home" replace />;
+    return <Navigate to="/customer-dashboard" replace />;
   }
-  return <Navigate to="/customer/home" replace />;
+  return <Navigate to="/customer-dashboard" replace />;
 }
 
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginGate />} />
+      <Route
+        path="/admin-dashboard"
+        element={<Navigate to="/admin/dashboard" replace />}
+      />
+      <Route
+        path="/customer-dashboard"
+        element={<Navigate to="/customer/home" replace />}
+      />
+      <Route
+        path="/nursery-dashboard"
+        element={<Navigate to="/nursery/dashboard" replace />}
+      />
       <Route path="/customer/signup" element={<CustomerSignup />} />
+      <Route path="/nursery/signup" element={<NurserySignup />} />
       <Route
         path="/admin"
         element={

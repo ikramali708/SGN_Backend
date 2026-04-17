@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGN.Core.Interfaces;
+using SGN.Core.Security;
 using SGN.Domain.Interfaces;
 using SGN_Backend.DTOs;
 
@@ -32,7 +33,11 @@ public class AdminAuthController : ControllerBase
     public async Task<IActionResult> Login(UserLoginDto dto)
     {
         var user = await _userRepo.GetByEmailAsync(dto.Email);
-        if (user == null || user.Password != dto.Password)
+        if (user == null)
+            return Unauthorized("Invalid email or password");
+
+        var passwordOk = PasswordVerification.SafeVerify(dto.Password, user.Password);
+        if (!passwordOk)
             return Unauthorized("Invalid email or password");
 
         if (!string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))

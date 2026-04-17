@@ -14,7 +14,7 @@ export default function CustomerAccountSidebar() {
 
   function handleLogout() {
     logout();
-    navigate('/customer/home', { replace: true });
+    navigate('/customer-dashboard', { replace: true });
   }
 
   return (

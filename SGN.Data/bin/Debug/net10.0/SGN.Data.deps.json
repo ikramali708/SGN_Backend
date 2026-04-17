@@ -777,6 +777,7 @@
       },
       "SGN.Core/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "4.1.0",
           "SGN.Domain": "1.0.0"
         },
         "runtime": {

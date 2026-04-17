@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 import Spinner from '../components/Spinner.jsx';
+import loginBackground from '../assets/login-back.jpg';
+import logoUrl from '../assets/Logo.png';
 
 export default function CustomerSignup() {
   const navigate = useNavigate();
@@ -43,11 +45,36 @@ export default function CustomerSignup() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-surface px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border-2 border-primary/35 bg-white p-8 shadow-lg">
-        <h1 className="text-center text-2xl font-bold text-primary">
-          Create customer account
-        </h1>
+    <div
+      className="relative flex min-h-screen items-center justify-center px-4 py-12"
+      style={{
+        backgroundImage: `url(${loginBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '100vh',
+      }}
+    >
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
+        aria-hidden
+      />
+      <div className="relative z-10 w-full max-w-md rounded-2xl border-2 border-primary/35 bg-white p-8 shadow-lg">
+        <div className="flex justify-center">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Link to="/customer-dashboard" aria-label="Go to customer dashboard">
+              <img
+                src={logoUrl}
+                alt="logo"
+                style={{ height: '55px', width: 'auto' }}
+              />
+            </Link>
+            <h1 className="text-2xl font-bold text-primary">
+              Create customer account
+            </h1>
+          </div>
+        </div>
         <p className="mt-2 text-center text-sm text-slate-500">
           Join SGN to browse plants and place COD orders
         </p>

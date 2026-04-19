@@ -14,4 +14,5 @@ public class User
     // Navigation
     public ICollection<Order>? Orders { get; set; }
     public ICollection<ContactMessage>? ContactMessages { get; set; }
+    public ICollection<SupportTicket>? SupportTickets { get; set; }
 }

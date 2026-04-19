@@ -127,6 +127,26 @@
             Basic aggregated metrics for admin reporting
             </summary>
         </member>
+        <member name="M:SGN_Backend.Controllers.AdminSupportController.GetTickets(System.String)">
+            <summary>
+            List all support tickets with optional status filter (Open, InProgress, Resolved).
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminSupportController.GetTicket(System.Int32)">
+            <summary>
+            Get ticket details including customer info and replies.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminSupportController.UpdateStatus(System.Int32,SGN.Core.Models.UpdateTicketStatusDto)">
+            <summary>
+            Update ticket status.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.AdminSupportController.Reply(System.Int32,SGN.Core.Models.ReplyDto)">
+            <summary>
+            Add an admin reply to a ticket.
+            </summary>
+        </member>
         <member name="T:SGN_Backend.Controllers.AdminUsersController">
             <summary>
             Admin user management.
@@ -201,6 +221,26 @@
         <member name="M:SGN_Backend.Controllers.CustomerProfileController.ChangePassword(SGN.Core.Models.CustomerChangePasswordDto)">
             <summary>
             Change password of the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerSupportController.CreateTicket(SGN.Core.Models.CreateTicketDto)">
+            <summary>
+            Create a new support ticket.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerSupportController.GetMyTickets">
+            <summary>
+            List support tickets for the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerSupportController.GetMyTicket(System.Int32)">
+            <summary>
+            Get a ticket with replies for the authenticated customer.
+            </summary>
+        </member>
+        <member name="M:SGN_Backend.Controllers.CustomerSupportController.Reply(System.Int32,SGN.Core.Models.ReplyDto)">
+            <summary>
+            Add a customer reply to a ticket.
             </summary>
         </member>
         <member name="M:SGN_Backend.Controllers.OrderController.PlaceOrder(SGN_Backend.DTOs.PlaceOrderDto)">

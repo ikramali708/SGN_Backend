@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const SLIDES = [
-  'https://images.unsplash.com/photo-1466692476869-a02e18069316?w=800&q=80',
-  'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80',
-  'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
-  'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&q=80',
-];
+import carousel1 from '../../assets/images/carousel1.jpg';
+import carousel2 from '../../assets/images/carousel2.jpg';
+import carousel3 from '../../assets/images/carousel3.jpg';
+
+const SLIDES = [carousel1, carousel2, carousel3];
 
 export default function CustomerHeroCarousel() {
   const maxStart = Math.max(0, SLIDES.length - 2);
@@ -38,7 +37,7 @@ export default function CustomerHeroCarousel() {
           {[left, right].map((src, i) => (
             <div
               key={`${pairStart}-${i}`}
-              className="relative aspect-[16/10] overflow-hidden rounded-shop bg-slate-800 shadow-shop ring-1 ring-white/10"
+              className="relative h-[260px] w-full overflow-hidden rounded-shop bg-slate-800 shadow-shop ring-1 ring-white/10 sm:h-[300px] md:h-[360px] lg:h-[400px]"
             >
               <img
                 src={src}

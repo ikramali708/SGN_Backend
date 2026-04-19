@@ -1,6 +1,5 @@
 ﻿using SGN.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace SGN.Data.Context;
 
@@ -18,6 +17,8 @@ public class NurseryDbContext : DbContext
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<OrderItem> OrderItems { get; set; } = null!;
     public DbSet<ContactMessage> ContactMessages { get; set; } = null!;
+    public DbSet<SupportTicket> SupportTickets { get; set; } = null!;
+    public DbSet<SupportReply> SupportReplies { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,5 +54,28 @@ public class NurseryDbContext : DbContext
             .HasMany(p => p.OrderItems)
             .WithOne(oi => oi.Plant)
             .HasForeignKey(oi => oi.PlantId);
+
+        modelBuilder.Entity<SupportTicket>(e =>
+        {
+            e.ToTable("SupportTickets");
+            e.HasOne(t => t.User)
+                .WithMany(u => u.SupportTickets)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(t => t.Order)
+                .WithMany()
+                .HasForeignKey(t => t.OrderId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<SupportReply>(e =>
+        {
+            e.ToTable("SupportReplies");
+            e.HasOne(r => r.Ticket)
+                .WithMany(t => t.Replies)
+                .HasForeignKey(r => r.TicketId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

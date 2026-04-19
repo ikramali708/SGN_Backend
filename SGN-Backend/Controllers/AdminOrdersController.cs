@@ -56,6 +56,11 @@ public class AdminOrdersController : ControllerBase
                     o.OrderId.ToString().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                     o.CustomerId.ToString().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                     o.ShippingAddress.Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                    (!string.IsNullOrEmpty(o.Province) && o.Province.Contains(s, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(o.City) && o.City.Contains(s, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(o.FullAddress) && o.FullAddress.Contains(s, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(o.PhoneNumber) && o.PhoneNumber.Contains(s, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(o.Comment) && o.Comment.Contains(s, StringComparison.OrdinalIgnoreCase)) ||
                     o.OrderStatus.Contains(s, StringComparison.OrdinalIgnoreCase) ||
                     o.PaymentStatus.Contains(s, StringComparison.OrdinalIgnoreCase))
                 .ToList();

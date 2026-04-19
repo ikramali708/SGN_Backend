@@ -6,24 +6,16 @@ import {
   loginUrlWithRedirect,
 } from '../../utils/postLoginRedirect.js';
 import { useCart } from '../../contexts/CartContext.jsx';
+import { ShoppingCart } from 'lucide-react';
 import logoUrl from '../../assets/Logo.png';
 
 function IconCart({ className }) {
   return (
-    <svg
-      className={className}
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <ShoppingCart
+      className={`${className ?? ''} transition-transform duration-200 ease-out group-hover:scale-110 group-hover:text-brand`.trim()}
+      strokeWidth={2}
       aria-hidden
-    >
-      <path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15a3 3 0 00-3-3m-6.75-3.75h11.218c1.121 0 2.1-.793 2.323-1.896l1.384-6.9A1.125 1.125 0 0018.225 4.5H5.25M8.25 18.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v-.008zm6.75-.75a.75.75 0 00-.75.75v.008a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75h-.008z" />
-    </svg>
+    />
   );
 }
 
@@ -116,10 +108,10 @@ export default function CustomerShopHeader({ variant = 'public' }) {
               <button
                 type="button"
                 onClick={openCart}
-                className="relative flex h-11 w-11 items-center justify-center rounded-full text-slate-700 transition-all duration-300 ease-out hover:bg-brand-surface"
+                className="group relative flex h-11 w-11 items-center justify-center rounded-full text-slate-700 transition-all duration-300 ease-out hover:bg-brand-surface"
                 aria-label={`Shopping cart, ${cartCount} items`}
               >
-                <IconCart className="h-6 w-6" />
+                <IconCart className="h-6 w-6 shrink-0" />
                 {cartCount > 0 && (
                   <span className="absolute right-0 top-0 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white">
                     {cartCount > 99 ? '99+' : cartCount}
@@ -166,10 +158,10 @@ export default function CustomerShopHeader({ variant = 'public' }) {
             <button
               type="button"
               onClick={openCart}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full text-slate-700 transition-all duration-300 ease-out hover:bg-brand-surface"
+              className="group relative flex h-11 w-11 items-center justify-center rounded-full text-slate-700 transition-all duration-300 ease-out hover:bg-brand-surface"
               aria-label={`Shopping cart, ${cartCount} items`}
             >
-              <IconCart className="h-6 w-6" />
+              <IconCart className="h-6 w-6 shrink-0" />
               {cartCount > 0 && (
                 <span className="absolute right-0 top-0 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white">
                   {cartCount > 99 ? '99+' : cartCount}

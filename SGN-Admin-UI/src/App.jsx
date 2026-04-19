@@ -9,6 +9,7 @@ import Plants from './pages/admin/Plants.jsx';
 import Orders from './pages/admin/Orders.jsx';
 import Categories from './pages/admin/Categories.jsx';
 import Reports from './pages/Reports.jsx';
+import AdminSupport from './pages/admin/Support.jsx';
 import NurseryDashboard from './pages/nursery/Dashboard.jsx';
 import NurseryPlants from './pages/nursery/Plants.jsx';
 import NurseryInventory from './pages/nursery/Inventory.jsx';
@@ -25,6 +26,8 @@ import CustomerPlantDetail from './pages/customer/PlantDetail.jsx';
 import CustomerOrders from './pages/customer/Orders.jsx';
 import CustomerCancelledOrders from './pages/customer/CancelledOrders.jsx';
 import CustomerProfile from './pages/customer/Profile.jsx';
+import CustomerSupport from './pages/customer/Support.jsx';
+import CustomerSupportDetail from './pages/customer/SupportDetail.jsx';
 import PlantDiseaseDetector from './pages/customer/PlantDiseaseDetector.jsx';
 import { useAuth } from './auth/AuthContext.jsx';
 import { isTokenExpired, normalizeRole } from './auth/token.js';
@@ -93,6 +96,8 @@ export default function App() {
         <Route path="orders" element={<Orders />} />
         <Route path="categories" element={<Categories />} />
         <Route path="reports" element={<Reports />} />
+        <Route path="support/:id" element={<AdminSupport />} />
+        <Route path="support" element={<AdminSupport />} />
       </Route>
       <Route
         path="/nursery"
@@ -137,6 +142,17 @@ export default function App() {
           <Route path="plant-disease" element={<PlantDiseaseDetector />} />
           <Route path="orders" element={<CustomerOrders />} />
           <Route path="cancelled" element={<CustomerCancelledOrders />} />
+        </Route>
+        <Route
+          path="support"
+          element={
+            <ProtectedRoute role="Customer">
+              <CustomerAccountLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<CustomerSupport />} />
+          <Route path=":id" element={<CustomerSupportDetail />} />
         </Route>
       </Route>
       <Route path="/" element={<CatchAll />} />

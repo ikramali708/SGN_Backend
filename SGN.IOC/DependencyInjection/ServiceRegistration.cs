@@ -21,6 +21,7 @@ namespace SGN.IOC
             services.AddScoped<IContactMessageRepository, ContactMessageRepository>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ISupportService, SupportService>();
         }
     }
 }

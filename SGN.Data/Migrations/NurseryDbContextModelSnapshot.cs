@@ -146,8 +146,20 @@ namespace SGN.Data.Migrations
                     b.Property<string>("CancellationReason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("FullAddress")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -158,6 +170,12 @@ namespace SGN.Data.Migrations
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")
@@ -249,6 +267,73 @@ namespace SGN.Data.Migrations
                     b.ToTable("Plants");
                 });
 
+            modelBuilder.Entity("SGN.Domain.Entities.SupportReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderRole")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("SupportReplies");
+                });
+
+            modelBuilder.Entity("SGN.Domain.Entities.SupportTicket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SupportTickets");
+                });
+
             modelBuilder.Entity("SGN.Domain.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -296,6 +381,35 @@ namespace SGN.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SGN.Domain.Entities.SupportReply", b =>
+                {
+                    b.HasOne("SGN.Domain.Entities.SupportTicket", "Ticket")
+                        .WithMany("Replies")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("SGN.Domain.Entities.SupportTicket", b =>
+                {
+                    b.HasOne("SGN.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SGN.Domain.Entities.User", "User")
+                        .WithMany("SupportTickets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("User");
                 });
@@ -369,11 +483,18 @@ namespace SGN.Data.Migrations
                     b.Navigation("OrderItems");
                 });
 
+            modelBuilder.Entity("SGN.Domain.Entities.SupportTicket", b =>
+                {
+                    b.Navigation("Replies");
+                });
+
             modelBuilder.Entity("SGN.Domain.Entities.User", b =>
                 {
                     b.Navigation("ContactMessages");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("SupportTickets");
                 });
 #pragma warning restore 612, 618
         }

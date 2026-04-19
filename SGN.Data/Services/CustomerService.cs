@@ -132,6 +132,12 @@ public class CustomerService : ICustomerService
         {
             CustomerId = userId,
             ShippingAddress = dto.ShippingAddress,
+            Country = NullIfWhiteSpace(dto.Country),
+            Province = NullIfWhiteSpace(dto.Province),
+            City = NullIfWhiteSpace(dto.City),
+            FullAddress = NullIfWhiteSpace(dto.FullAddress),
+            PhoneNumber = NullIfWhiteSpace(dto.PhoneNumber),
+            Comment = NullIfWhiteSpace(dto.Comment),
             OrderDate = DateTime.Now,
             OrderStatus = "Pending",
             PaymentStatus = "COD",
@@ -173,6 +179,12 @@ public class CustomerService : ICustomerService
             OrderStatus = order.OrderStatus,
             PaymentStatus = order.PaymentStatus,
             ShippingAddress = order.ShippingAddress,
+            Country = order.Country,
+            Province = order.Province,
+            City = order.City,
+            FullAddress = order.FullAddress,
+            PhoneNumber = order.PhoneNumber,
+            Comment = order.Comment,
             OrderDate = order.OrderDate,
             OrderItems = order.OrderItems.Select(i => new CustomerOrderItemResponseDto
             {
@@ -210,6 +222,12 @@ public class CustomerService : ICustomerService
             OrderStatus = order.OrderStatus,
             PaymentStatus = order.PaymentStatus,
             ShippingAddress = order.ShippingAddress,
+            Country = order.Country,
+            Province = order.Province,
+            City = order.City,
+            FullAddress = order.FullAddress,
+            PhoneNumber = order.PhoneNumber,
+            Comment = order.Comment,
             OrderDate = order.OrderDate,
             OrderItems = (order.OrderItems ?? Enumerable.Empty<OrderItem>())
                 .Select(i => new CustomerOrderItemResponseDto
@@ -220,6 +238,9 @@ public class CustomerService : ICustomerService
                 }).ToList()
         };
     }
+
+    private static string? NullIfWhiteSpace(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     public async Task<(bool Success, int StatusCode, object Response)> CancelOrderAsync(int userId, int orderId)
     {

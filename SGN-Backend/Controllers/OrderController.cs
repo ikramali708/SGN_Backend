@@ -70,6 +70,12 @@ namespace SGN_Backend.Controllers
             {
                 CustomerId = userId,
                 ShippingAddress = dto.ShippingAddress,
+                Country = string.IsNullOrWhiteSpace(dto.Country) ? null : dto.Country.Trim(),
+                Province = string.IsNullOrWhiteSpace(dto.Province) ? null : dto.Province.Trim(),
+                City = string.IsNullOrWhiteSpace(dto.City) ? null : dto.City.Trim(),
+                FullAddress = string.IsNullOrWhiteSpace(dto.FullAddress) ? null : dto.FullAddress.Trim(),
+                PhoneNumber = string.IsNullOrWhiteSpace(dto.PhoneNumber) ? null : dto.PhoneNumber.Trim(),
+                Comment = string.IsNullOrWhiteSpace(dto.Comment) ? null : dto.Comment.Trim(),
                 OrderDate = DateTime.Now,
                 OrderStatus = "Pending",
                 PaymentStatus = "COD",
@@ -116,6 +122,12 @@ namespace SGN_Backend.Controllers
                 order.OrderStatus,
                 order.PaymentStatus,
                 order.ShippingAddress,
+                order.Country,
+                order.Province,
+                order.City,
+                order.FullAddress,
+                order.PhoneNumber,
+                order.Comment,
                 order.OrderDate,
                 Items = order.OrderItems.Select(i => new { i.PlantId, i.Quantity, i.PriceAtTime })
             });

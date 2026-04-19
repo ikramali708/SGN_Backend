@@ -8,6 +8,7 @@ const linksByRole = {
     { to: '/admin/plants', label: 'Plants' },
     { to: '/admin/orders', label: 'Orders' },
     { to: '/admin/categories', label: 'Categories' },
+    { to: '/admin/support', label: 'Support' },
   ],
   NurseryOwner: [
     { to: '/nursery/dashboard', label: 'Dashboard' },

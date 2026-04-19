@@ -25,6 +25,10 @@ function orderDate(o) {
   }
 }
 
+function pick(o, camel, pascal) {
+  return o[camel] ?? o[pascal];
+}
+
 export default function CustomerOrders({ cancelledOnly = false }) {
   const toast = useShopToast();
   const [orders, setOrders] = useState([]);
@@ -143,10 +147,38 @@ export default function CustomerOrders({ cancelledOnly = false }) {
                     <p className="text-lg font-bold text-slate-900">
                       Total: Rs. {Number(totalAmount(o)).toFixed(2)}
                     </p>
-                    {(o.shippingAddress ?? o.ShippingAddress) && (
-                      <p className="mt-2 text-sm text-slate-600">
-                        Ship to: {o.shippingAddress ?? o.ShippingAddress}
-                      </p>
+                    {(pick(o, 'shippingAddress', 'ShippingAddress') ||
+                      pick(o, 'fullAddress', 'FullAddress')) && (
+                      <div className="mt-3 space-y-1 rounded-shop border border-brand-border/60 bg-brand-surface/50 px-3 py-2 text-sm text-slate-700">
+                        <p className="font-semibold text-brand">Delivery details</p>
+                        {(pick(o, 'country', 'Country') ||
+                          pick(o, 'province', 'Province') ||
+                          pick(o, 'city', 'City')) && (
+                          <p>
+                            {[pick(o, 'city', 'City'), pick(o, 'province', 'Province'), pick(o, 'country', 'Country')]
+                              .filter(Boolean)
+                              .join(', ')}
+                          </p>
+                        )}
+                        {(pick(o, 'fullAddress', 'FullAddress') ||
+                          pick(o, 'shippingAddress', 'ShippingAddress')) && (
+                          <p className="whitespace-pre-wrap">
+                            {pick(o, 'fullAddress', 'FullAddress') ||
+                              pick(o, 'shippingAddress', 'ShippingAddress')}
+                          </p>
+                        )}
+                        {pick(o, 'phoneNumber', 'PhoneNumber') && (
+                          <p>
+                            Receiver phone:{' '}
+                            <span className="font-medium">{pick(o, 'phoneNumber', 'PhoneNumber')}</span>
+                          </p>
+                        )}
+                        {pick(o, 'comment', 'Comment') && (
+                          <p className="text-slate-600">
+                            Comment: {pick(o, 'comment', 'Comment')}
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
                   {!cancelledOnly && pending && (

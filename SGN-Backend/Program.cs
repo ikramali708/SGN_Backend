@@ -117,9 +117,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Swagger
+// Swagger + pending migrations (Development only)
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<NurseryDbContext>();
+        db.Database.Migrate();
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api.js';
 import { useCart } from '../contexts/CartContext.jsx';
@@ -10,6 +10,12 @@ import {
   isCustomerLoggedIn,
   loginUrlWithRedirect,
 } from '../utils/postLoginRedirect.js';
+import {
+  citiesForProvince,
+  CITY_OTHER,
+  DEFAULT_SHIPPING_COUNTRY,
+  PAKISTAN_PROVINCES,
+} from '../data/pakistanShippingLocations.js';
 
 export default function CustomerCartModal() {
   const navigate = useNavigate();
@@ -25,11 +31,49 @@ export default function CustomerCartModal() {
     cartOpen,
     closeCart,
   } = useCart();
-  const [shippingAddress, setShippingAddress] = useState('');
+  const [province, setProvince] = useState('');
+  const [citySelect, setCitySelect] = useState('');
+  const [cityOther, setCityOther] = useState('');
+  const [fullAddress, setFullAddress] = useState('');
+  const [receiverPhone, setReceiverPhone] = useState('');
+  const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const cityOptions = citiesForProvince(province);
+
+  useEffect(() => {
+    if (!province) {
+      setCitySelect('');
+      setCityOther('');
+      return;
+    }
+    const opts = citiesForProvince(province);
+    if (!opts.length) return;
+    const stillValid = opts.some((o) => o.value === citySelect);
+    if (!stillValid) setCitySelect(opts[0].value);
+  }, [province]);
+
   if (!cartOpen) return null;
+
+  function resetShippingForm() {
+    setProvince('');
+    setCitySelect('');
+    setCityOther('');
+    setFullAddress('');
+    setReceiverPhone('');
+    setComment('');
+  }
+
+  function validateShipping() {
+    if (!province) return 'Please select a state or province.';
+    const resolvedCity =
+      citySelect === CITY_OTHER ? cityOther.trim() : (citySelect || '').trim();
+    if (!resolvedCity) return 'Please select or enter a city.';
+    if (!fullAddress.trim()) return 'Please enter the full delivery address.';
+    if (!receiverPhone.trim()) return 'Please enter the receiver phone number.';
+    return '';
+  }
 
   async function placeOrder(e) {
     e.preventDefault();
@@ -43,21 +87,34 @@ export default function CustomerCartModal() {
       setError('Your cart is empty.');
       return;
     }
-    if (!shippingAddress.trim()) {
-      setError('Please enter a shipping address.');
+    const shipErr = validateShipping();
+    if (shipErr) {
+      setError(shipErr);
       return;
     }
+    const resolvedCity =
+      citySelect === CITY_OTHER ? cityOther.trim() : citySelect.trim();
+    const trimmedAddress = fullAddress.trim();
+    const trimmedPhone = receiverPhone.trim();
+    const trimmedComment = comment.trim();
+
     setLoading(true);
     try {
       await api.post('/api/customer/orders', {
-        shippingAddress: shippingAddress.trim(),
+        shippingAddress: trimmedAddress,
+        country: DEFAULT_SHIPPING_COUNTRY,
+        province,
+        city: resolvedCity,
+        fullAddress: trimmedAddress,
+        phoneNumber: trimmedPhone,
+        comment: trimmedComment || null,
         orderItems: items.map((i) => ({
           plantId: i.plantId,
           quantity: i.quantity,
         })),
       });
       clearCart();
-      setShippingAddress('');
+      resetShippingForm();
       toast.success('Order placed successfully!');
       navigate('/customer/account/orders', { replace: false });
       closeCart();
@@ -72,6 +129,10 @@ export default function CustomerCartModal() {
       setLoading(false);
     }
   }
+
+  const inputBase =
+    'mt-1 w-full rounded-shop border border-brand-border bg-white px-3 py-2 text-sm outline-none transition-all duration-300 ease-out focus:border-brand-light focus:ring-2 focus:ring-brand-light/40 disabled:bg-slate-100';
+  const labelBase = 'block text-xs font-semibold text-slate-600';
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
@@ -162,20 +223,132 @@ export default function CustomerCartModal() {
               ))}
             </ul>
           )}
-          <div>
-            <label className="block text-sm font-semibold text-slate-700">
-              Shipping address
-            </label>
-            <textarea
-              required={items.length > 0}
-              rows={3}
-              value={shippingAddress}
-              onChange={(e) => setShippingAddress(e.target.value)}
-              disabled={!items.length}
-              className="mt-1 w-full rounded-shop border border-brand-border bg-white px-3 py-2 text-sm outline-none transition-all duration-300 ease-out focus:border-brand-light focus:ring-2 focus:ring-brand-light/40 disabled:bg-slate-100"
-              placeholder="Street, city, phone for delivery…"
-            />
+
+          <div className="rounded-shop border border-brand-border bg-brand-surface/40 p-3 sm:p-4">
+            <h3 className="text-sm font-bold text-brand">Shipping address</h3>
+            <p className="mt-0.5 text-xs text-slate-600">
+              COD delivery — please fill in accurate details.
+            </p>
+
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div>
+                <label className={labelBase} htmlFor="ship-country">
+                  Country
+                </label>
+                <input
+                  id="ship-country"
+                  type="text"
+                  readOnly
+                  value={DEFAULT_SHIPPING_COUNTRY}
+                  tabIndex={-1}
+                  className={`${inputBase} cursor-not-allowed bg-slate-50 text-slate-700`}
+                />
+              </div>
+              <div>
+                <label className={labelBase} htmlFor="ship-province">
+                  State / province <span className="text-red-600">*</span>
+                </label>
+                <select
+                  id="ship-province"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                  disabled={!items.length}
+                  required={items.length > 0}
+                  className={inputBase}
+                >
+                  <option value="">Select province</option>
+                  {PAKISTAN_PROVINCES.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className={labelBase} htmlFor="ship-city">
+                  City <span className="text-red-600">*</span>
+                </label>
+                <select
+                  id="ship-city"
+                  value={citySelect}
+                  onChange={(e) => setCitySelect(e.target.value)}
+                  disabled={!items.length || !province}
+                  required={items.length > 0 && !!province && citySelect !== CITY_OTHER}
+                  className={inputBase}
+                >
+                  {!province ? (
+                    <option value="">Select province first</option>
+                  ) : (
+                    cityOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))
+                  )}
+                </select>
+                {citySelect === CITY_OTHER && (
+                  <input
+                    type="text"
+                    value={cityOther}
+                    onChange={(e) => setCityOther(e.target.value)}
+                    placeholder="Enter city name"
+                    className={`${inputBase} mt-2`}
+                    autoComplete="address-level2"
+                  />
+                )}
+              </div>
+            </div>
+
+            <div className="mt-3">
+              <label className={labelBase} htmlFor="ship-full-address">
+                Full address <span className="text-red-600">*</span>
+              </label>
+              <textarea
+                id="ship-full-address"
+                rows={3}
+                value={fullAddress}
+                onChange={(e) => setFullAddress(e.target.value)}
+                disabled={!items.length}
+                required={items.length > 0}
+                className={inputBase}
+                placeholder="House / street / area / landmark…"
+              />
+            </div>
+
+            <div className="mt-3">
+              <label className={labelBase} htmlFor="ship-phone">
+                Receiver phone number <span className="text-red-600">*</span>
+              </label>
+              <input
+                id="ship-phone"
+                type="tel"
+                inputMode="tel"
+                value={receiverPhone}
+                onChange={(e) => setReceiverPhone(e.target.value)}
+                disabled={!items.length}
+                required={items.length > 0}
+                className={inputBase}
+                placeholder="03xx…"
+                autoComplete="tel"
+              />
+            </div>
+
+            <div className="mt-3">
+              <label className={labelBase} htmlFor="ship-comment">
+                Comment <span className="font-normal text-slate-500">(optional)</span>
+              </label>
+              <textarea
+                id="ship-comment"
+                rows={2}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                disabled={!items.length}
+                className={inputBase}
+                placeholder="Delivery notes, gate code, etc."
+              />
+            </div>
           </div>
+
           <p className="text-sm text-slate-600">
             Payment:{' '}
             <span className="font-semibold text-brand">Cash on delivery (COD)</span>

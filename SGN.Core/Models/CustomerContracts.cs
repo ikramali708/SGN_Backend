@@ -30,6 +30,12 @@ public sealed class CustomerChangePasswordDto
 public sealed class CustomerOrderCreateDto
 {
     public string ShippingAddress { get; set; } = null!;
+    public string? Country { get; set; }
+    public string? Province { get; set; }
+    public string? City { get; set; }
+    public string? FullAddress { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Comment { get; set; }
     public List<CustomerOrderItemCreateDto> OrderItems { get; set; } = new();
 }
 
@@ -76,6 +82,12 @@ public sealed class CustomerOrderResponseDto
     public string OrderStatus { get; set; } = null!;
     public string PaymentStatus { get; set; } = null!;
     public string ShippingAddress { get; set; } = null!;
+    public string? Country { get; set; }
+    public string? Province { get; set; }
+    public string? City { get; set; }
+    public string? FullAddress { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Comment { get; set; }
     public DateTime OrderDate { get; set; }
     public List<CustomerOrderItemResponseDto> OrderItems { get; set; } = new();
 }

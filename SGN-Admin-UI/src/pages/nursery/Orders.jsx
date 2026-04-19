@@ -6,10 +6,29 @@ import Spinner from '../../components/Spinner.jsx';
 const columns = [
   { key: 'id', label: 'Order ID' },
   { key: 'customer', label: 'Customer' },
+  { key: 'shipping', label: 'Shipping' },
   { key: 'qty', label: 'Quantity' },
   { key: 'amount', label: 'Amount' },
   { key: 'status', label: 'Status' },
 ];
+
+function orderShippingLines(o) {
+  const city = o.city ?? o.City;
+  const province = o.province ?? o.Province;
+  const country = o.country ?? o.Country;
+  const phone = o.phoneNumber ?? o.PhoneNumber;
+  const full = o.fullAddress ?? o.FullAddress;
+  const legacy = o.shippingAddress ?? o.ShippingAddress;
+  const comment = o.comment ?? o.Comment;
+  const linePlace = [city, province, country].filter(Boolean).join(', ');
+  const addr = (full || legacy || '').trim();
+  const bits = [];
+  if (linePlace) bits.push(linePlace);
+  if (addr) bits.push(addr);
+  if (phone) bits.push(`Phone: ${phone}`);
+  if (comment) bits.push(`Note: ${comment}`);
+  return bits.length ? bits.join(' · ') : (legacy || '—');
+}
 
 const statusOptions = ['Pending', 'Completed', 'Cancelled'];
 
@@ -74,6 +93,12 @@ export default function NurseryOrders() {
           <tr key={o.orderId} className="hover:bg-slate-50">
             <td className="px-4 py-3 font-medium">#{o.orderId}</td>
             <td className="px-4 py-3">{o.customer?.name ?? `#${o.customerId}`}</td>
+            <td
+              className="max-w-[220px] px-4 py-3 text-xs text-slate-700"
+              title={orderShippingLines(o)}
+            >
+              <span className="line-clamp-3">{orderShippingLines(o)}</span>
+            </td>
             <td className="px-4 py-3">
               {(o.orderItems ?? []).reduce((sum, item) => sum + (item.quantity || 0), 0)}
             </td>

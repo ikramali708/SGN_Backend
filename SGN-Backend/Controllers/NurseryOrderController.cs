@@ -58,6 +58,12 @@ public class NurseryOrderController : ControllerBase
             o.OrderStatus,
             o.PaymentStatus,
             o.ShippingAddress,
+            o.Country,
+            o.Province,
+            o.City,
+            o.FullAddress,
+            o.PhoneNumber,
+            o.Comment,
             Customer = customerMap[o.CustomerId],
             OrderItems = o.OrderItems?
                 .Where(oi => oi.Plant != null && oi.Plant.NurseryId == nurseryId)

@@ -6,6 +6,7 @@ const items = [
   { to: '/customer/account/plant-disease', label: 'Plant Disease Detector' },
   { to: '/customer/account/orders', label: 'My Orders' },
   { to: '/customer/account/cancelled', label: 'Cancelled Orders' },
+  { to: '/customer/support', label: 'Support' },
 ];
 
 export default function CustomerAccountSidebar() {

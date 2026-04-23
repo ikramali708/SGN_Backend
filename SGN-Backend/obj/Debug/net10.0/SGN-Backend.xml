@@ -112,6 +112,11 @@
             <param name="page">1-based page index</param>
             <param name="pageSize">Items per page (max 100)</param>
         </member>
+        <member name="M:SGN_Backend.Controllers.AdminPlantsController.Delete(System.Int32)">
+            <summary>
+            Delete plant by id.
+            </summary>
+        </member>
         <member name="M:SGN_Backend.Controllers.AdminPlantsController.GetById(System.Int32)">
             <summary>
             Get plant details by id

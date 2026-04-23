@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SGN.Data.Context;
 using SGN.Domain.Entities;
 using SGN.Domain.Interfaces;
 using SGN_Backend.DTOs;
@@ -18,10 +20,12 @@ namespace SGN_Backend.Controllers;
 public class AdminOrdersController : ControllerBase
 {
     private readonly IOrderRepository _orderRepo;
+    private readonly NurseryDbContext _context;
 
-    public AdminOrdersController(IOrderRepository orderRepo)
+    public AdminOrdersController(IOrderRepository orderRepo, NurseryDbContext context)
     {
         _orderRepo = orderRepo;
+        _context = context;
     }
 
     /// <summary>
@@ -32,14 +36,40 @@ public class AdminOrdersController : ControllerBase
     /// <param name="page">1-based page index</param>
     /// <param name="pageSize">Items per page (max 100)</param>
     [HttpGet]
-    [ProducesResponseType(typeof(PagedResultDto<Order>), 200)]
-    public async Task<ActionResult<PagedResultDto<Order>>> GetOrders(
+    [ProducesResponseType(typeof(PagedResultDto<AdminOrderListItemDto>), 200)]
+    public async Task<ActionResult<PagedResultDto<AdminOrderListItemDto>>> GetOrders(
         [FromQuery] string? search,
         [FromQuery] string? status,
         [FromQuery] int? page,
         [FromQuery] int? pageSize)
     {
-        var all = (await _orderRepo.GetAllAsync()).ToList();
+        var all = await _context.Orders
+            .AsNoTracking()
+            .Select(o => new AdminOrderListItemDto(
+                o.OrderId,
+                o.CustomerId,
+                o.OrderDate,
+                o.TotalAmount,
+                o.OrderStatus,
+                o.PaymentStatus,
+                o.ShippingAddress,
+                o.Country,
+                o.Province,
+                o.City,
+                o.FullAddress,
+                o.PhoneNumber,
+                o.Comment,
+                o.CancellationReason,
+                _context.OrderItems
+                    .Where(oi => oi.OrderId == o.OrderId)
+                    .Select(oi => oi.Plant != null && oi.Plant.Nursery != null ? oi.Plant.Nursery.NurseryName : null)
+                    .FirstOrDefault(),
+                o.Customer != null ? o.Customer.Name : null,
+                _context.OrderItems
+                    .Where(oi => oi.OrderId == o.OrderId)
+                    .Select(oi => (int?)oi.Quantity)
+                    .Sum() ?? 0))
+            .ToListAsync();
 
         if (!string.IsNullOrWhiteSpace(status))
         {

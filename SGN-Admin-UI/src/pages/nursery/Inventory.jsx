@@ -14,6 +14,7 @@ export default function NurseryInventory() {
   const [stockMap, setStockMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -47,8 +48,10 @@ export default function NurseryInventory() {
   }, []);
 
   async function updateStock(plantId) {
+    setError('');
+    setSuccess('');
     try {
-      await api.patch(`/api/nursery/inventory/${plantId}`, {
+      await api.put(`/api/nursery/inventory/update-stock/${plantId}`, {
         stockQuantity: Number(stockMap[plantId]),
       });
       setItems((prev) =>
@@ -58,6 +61,7 @@ export default function NurseryInventory() {
             : x
         )
       );
+      setSuccess('Updated Successfully');
     } catch (e) {
       setError(e.response?.data?.message || e.message || 'Failed to update stock.');
     }
@@ -80,6 +84,11 @@ export default function NurseryInventory() {
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">
           {error}
+        </div>
+      )}
+      {success && (
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-emerald-700">
+          {success}
         </div>
       )}
       <Table columns={columns}>

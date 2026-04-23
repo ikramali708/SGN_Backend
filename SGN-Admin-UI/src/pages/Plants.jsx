@@ -53,7 +53,7 @@ export default function Plants() {
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   async function removePlant(id) {
-    if (!confirm('Delete this plant? The API may not support delete yet.')) {
+    if (!confirm('Delete this plant? This action cannot be undone.')) {
       return;
     }
     try {
@@ -62,9 +62,7 @@ export default function Plants() {
       setTotalCount((t) => Math.max(0, t - 1));
     } catch (e) {
       alert(
-        e.response?.status === 404 || e.response?.status === 405
-          ? 'Delete is not implemented on the backend for this resource.'
-          : e.response?.data?.message || e.message || 'Delete failed'
+        e.response?.data?.message || e.message || 'Delete failed'
       );
     }
   }
@@ -110,10 +108,10 @@ export default function Plants() {
               <tr key={p.plantId} className="hover:bg-slate-50">
                 <td className="px-4 py-3 font-medium">{p.plantName}</td>
                 <td className="px-4 py-3">
-                  {p.nursery?.nurseryName ?? `Nursery #${p.nurseryId}`}
+                  {p.nurseryName || p.nursery?.nurseryName || `Nursery #${p.nurseryId}`}
                 </td>
                 <td className="px-4 py-3">
-                  {p.category?.categoryName ?? `Category #${p.categoryId}`}
+                  {p.categoryName || p.category?.categoryName || `Category #${p.categoryId}`}
                 </td>
                 <td className="px-4 py-3">{Number(p.price).toFixed(2)}</td>
                 <td className="px-4 py-3">{p.stockQuantity}</td>

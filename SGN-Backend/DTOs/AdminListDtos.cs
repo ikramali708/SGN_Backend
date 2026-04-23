@@ -17,6 +17,40 @@ public record AdminNurseryListItemDto(
     string Phone,
     string Address,
     string City,
+    int TotalPlants,
     string ApprovalStatus,
     string Status,
     DateTime CreatedAt);
+
+public record AdminPlantListItemDto(
+    int PlantId,
+    int NurseryId,
+    int CategoryId,
+    string PlantName,
+    string? Description,
+    decimal Price,
+    int StockQuantity,
+    string? ImageUrl,
+    string Status,
+    DateTime CreatedAt,
+    string? NurseryName,
+    string? CategoryName);
+
+public record AdminOrderListItemDto(
+    int OrderId,
+    int CustomerId,
+    DateTime OrderDate,
+    decimal TotalAmount,
+    string OrderStatus,
+    string PaymentStatus,
+    string ShippingAddress,
+    string? Country,
+    string? Province,
+    string? City,
+    string? FullAddress,
+    string? PhoneNumber,
+    string? Comment,
+    string? CancellationReason,
+    string? NurseryName,
+    string? CustomerName,
+    int Quantity);

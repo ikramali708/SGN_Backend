@@ -9,6 +9,7 @@ using SGN_Backend.Swagger;
 using System.Text;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,11 @@ builder.Services.AddDbContext<NurseryDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 var mlServiceBase = builder.Configuration["MlService:BaseUrl"] ?? "http://127.0.0.1:8000";
 if (!mlServiceBase.EndsWith('/'))

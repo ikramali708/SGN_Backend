@@ -120,11 +120,8 @@ export default function Nurseries() {
             <tr key={n.nurseryId} className="hover:bg-slate-50">
               <td className="px-4 py-3 font-medium">{n.nurseryName}</td>
               <td className="px-4 py-3">{n.ownerName}</td>
-              <td className="px-4 py-3">
-                {n.city}
-                {n.address ? ` · ${n.address}` : ''}
-              </td>
-              <td className="px-4 py-3 text-slate-400">—</td>
+              <td className="px-4 py-3">{n.address || n.city || '—'}</td>
+              <td className="px-4 py-3">{n.totalPlants ?? 0}</td>
               <td className="px-4 py-3">
                 <span className="mr-1 rounded-full bg-secondary/50 px-2 py-0.5 text-xs font-medium text-primary">
                   {n.approvalStatus}

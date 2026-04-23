@@ -31,8 +31,6 @@ function orderShippingLines(o) {
   return bits.length ? bits.join(' · ') : (legacy || '—');
 }
 
-const statusOptions = ['Pending', 'Successful', 'Cancelled'];
-
 function statusBadge(status) {
   const s = (status || '').toLowerCase();
   if (s === 'successful')
@@ -80,41 +78,22 @@ export default function Orders() {
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   function nurseryLabel(o) {
-    const items = o.orderItems;
-    if (!items?.length) return '—';
+    if (o.nurseryName) return o.nurseryName;
+    const orderItems = o.orderItems;
+    if (!orderItems?.length) return '—';
     const ids = [
       ...new Set(
-        items.map((i) => i.plant?.nursery?.nurseryName || i.plant?.nurseryId)
+        orderItems.map((i) => i.plant?.nursery?.nurseryName || i.plant?.nurseryId)
       ),
     ];
     return ids.slice(0, 2).join(', ') + (ids.length > 2 ? '…' : '');
   }
 
   function qtySum(o) {
-    const items = o.orderItems;
-    if (!items?.length) return '—';
-    return items.reduce((a, i) => a + (i.quantity || 0), 0);
-  }
-
-  async function patchStatus(orderId, newStatus) {
-    try {
-      await api.patch(`/api/admin/orders/${orderId}/status`, {
-        orderStatus: newStatus,
-      });
-      setItems((prev) =>
-        prev.map((o) =>
-          o.orderId === orderId ? { ...o, orderStatus: newStatus } : o
-        )
-      );
-    } catch (e) {
-      if (e.response?.status === 404 || e.response?.status === 405) {
-        alert(
-          'Order status update is not implemented on the API yet. Showing UI only.'
-        );
-      } else {
-        alert(e.response?.data?.message || e.message || 'Update failed');
-      }
-    }
+    if (typeof o.quantity === 'number') return o.quantity;
+    const orderItems = o.orderItems;
+    if (!orderItems?.length) return '—';
+    return orderItems.reduce((a, i) => a + (i.quantity || 0), 0);
   }
 
   return (
@@ -140,9 +119,7 @@ export default function Orders() {
                 <td className="px-4 py-3 font-medium">#{o.orderId}</td>
                 <td className="px-4 py-3 text-sm">{nurseryLabel(o)}</td>
                 <td className="px-4 py-3 text-sm">
-                  {o.customer?.name
-                    ? `${o.customer.name} (#${o.customerId})`
-                    : `#${o.customerId}`}
+                  {o.customerName || o.customer?.name || `#${o.customerId}`}
                 </td>
                 <td
                   className="max-w-[220px] px-4 py-3 text-xs text-slate-700"
@@ -155,24 +132,11 @@ export default function Orders() {
                   {Number(o.totalAmount).toFixed(2)}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <span
-                      className={`inline-block w-fit rounded-full border px-2 py-0.5 text-xs font-semibold ${statusBadge(o.orderStatus)}`}
-                    >
-                      {o.orderStatus}
-                    </span>
-                    <select
-                      className="max-w-[160px] rounded border border-primary/30 bg-white px-2 py-1 text-xs"
-                      value={o.orderStatus}
-                      onChange={(e) => patchStatus(o.orderId, e.target.value)}
-                    >
-                      {statusOptions.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <span
+                    className={`inline-block w-fit rounded-full border px-2 py-0.5 text-xs font-semibold ${statusBadge(o.orderStatus)}`}
+                  >
+                    {o.orderStatus}
+                  </span>
                 </td>
               </tr>
             ))}

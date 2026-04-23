@@ -36,6 +36,7 @@ export default function NurseryOrders() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -57,11 +58,15 @@ export default function NurseryOrders() {
   }, []);
 
   async function updateStatus(orderId, orderStatus) {
+    setError('');
+    setSuccess('');
     try {
-      await api.put(`/api/nursery/orders/${orderId}/status`, { status: orderStatus });
+      const { data } = await api.put(`/api/nursery/orders/${orderId}/status`, { status: orderStatus });
+      const resolvedStatus = data?.orderStatus ?? orderStatus;
       setItems((prev) =>
-        prev.map((o) => (o.orderId === orderId ? { ...o, orderStatus } : o))
+        prev.map((o) => (o.orderId === orderId ? { ...o, orderStatus: resolvedStatus } : o))
       );
+      setSuccess('Updated Successfully');
     } catch (e) {
       setError(
         e.response?.data?.message || e.message || 'Failed to update order status.'
@@ -86,6 +91,11 @@ export default function NurseryOrders() {
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-700">
           {error}
+        </div>
+      )}
+      {success && (
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-emerald-700">
+          {success}
         </div>
       )}
       <Table columns={columns}>

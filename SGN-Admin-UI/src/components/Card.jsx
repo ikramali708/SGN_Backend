@@ -1,6 +1,6 @@
 export default function Card({ title, value, subtitle, icon }) {
   return (
-    <div className="rounded-xl border-2 border-primary/30 bg-white p-5 shadow-sm transition hover:border-primary/60">
+    <div className="group rounded-xl border-2 border-primary/30 bg-white p-5 shadow-sm transition hover:border-primary/60">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-slate-500">{title}</p>

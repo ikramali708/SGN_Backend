@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SGN.IOC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3c6585b84616b26e79711a5f8041d53be30377e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b511af27bbb20fd91e2d0d481f9375ad5ab79adb")]
 [assembly: System.Reflection.AssemblyProductAttribute("SGN.IOC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SGN.IOC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

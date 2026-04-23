@@ -169,7 +169,7 @@ export default function NurseryPlants() {
       }
       if (editingId) {
         await api.put(`/api/nursery/plants/${editingId}`, formData);
-        setSuccess('Plant updated successfully.');
+        setSuccess('Updated Successfully');
       } else {
         await api.post('/api/nursery/plants', formData);
         setSuccess('Plant added successfully.');
@@ -234,7 +234,7 @@ export default function NurseryPlants() {
             <tr key={p.plantId} className="hover:bg-slate-50">
               <td className="px-4 py-3 font-medium">{p.plantName}</td>
               <td className="px-4 py-3 text-sm">{p.description || '—'}</td>
-              <td className="px-4 py-3">{p.category?.categoryName ?? p.categoryId}</td>
+              <td className="px-4 py-3">{p.categoryName ?? p.category?.categoryName ?? p.categoryId}</td>
               <td className="px-4 py-3">{Number(p.price || 0).toFixed(2)}</td>
               <td className="px-4 py-3">{p.stockQuantity}</td>
               <td className="px-4 py-3">

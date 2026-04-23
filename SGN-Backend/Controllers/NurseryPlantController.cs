@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using SGN.Data.Context;
 using SGN.Domain.Entities;
 using SGN.Domain.Interfaces;
 using SGN_Backend.DTOs;
@@ -16,31 +19,62 @@ public class NurseryPlantController : ControllerBase
 {
     private readonly IPlantRepository _plantRepo;
     private readonly ICategoryRepository _categoryRepo;
+    private readonly NurseryDbContext _dbContext;
     private readonly IWebHostEnvironment _env;
+    private readonly ILogger<NurseryPlantController> _logger;
 
     public NurseryPlantController(
         IPlantRepository plantRepo,
         ICategoryRepository categoryRepo,
-        IWebHostEnvironment env)
+        NurseryDbContext dbContext,
+        IWebHostEnvironment env,
+        ILogger<NurseryPlantController> logger)
     {
         _plantRepo = plantRepo;
         _categoryRepo = categoryRepo;
+        _dbContext = dbContext;
         _env = env;
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetMyPlants()
     {
-        if (!TryGetNurseryId(out var nurseryId))
-            return Unauthorized("Invalid nursery token.");
+        try
+        {
+            if (!TryGetNurseryId(out var nurseryId))
+                return Unauthorized("Invalid nursery token.");
 
-        var plants = await _plantRepo.GetAllAsync();
-        var result = plants
-            .Where(p => p.NurseryId == nurseryId)
-            .OrderByDescending(p => p.CreatedAt)
-            .ToList();
+            var plants = await _plantRepo.GetAllAsync();
+            var categories = await _categoryRepo.GetAllAsync();
+            var categoryMap = categories.ToDictionary(c => c.CategoryId, c => c.CategoryName);
 
-        return Ok(result);
+            var result = plants
+                .Where(p => p.NurseryId == nurseryId)
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new
+                {
+                    p.PlantId,
+                    p.NurseryId,
+                    p.CategoryId,
+                    CategoryName = categoryMap.TryGetValue(p.CategoryId, out var categoryName) ? categoryName : null,
+                    p.PlantName,
+                    p.Description,
+                    p.Price,
+                    p.StockQuantity,
+                    p.ImageUrl,
+                    p.Status,
+                    p.CreatedAt
+                })
+                .ToList();
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load nursery plants.");
+            return StatusCode(500, new { message = "Failed to load nursery plants." });
+        }
     }
 
     [HttpPost]
@@ -91,35 +125,81 @@ public class NurseryPlantController : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UpdatePlant(int id, [FromForm] CreatePlantDto dto)
     {
-        if (!TryGetNurseryId(out var nurseryId))
-            return Unauthorized("Invalid nursery token.");
-
-        var plant = await _plantRepo.GetByIdAsync(id);
-        if (plant == null)
-            return NotFound("Plant not found.");
-
-        if (plant.NurseryId != nurseryId)
-            return Unauthorized("You can only modify your own plants.");
-
-        var category = await _categoryRepo.GetByIdAsync(dto.CategoryId);
-        if (category == null)
-            return BadRequest("Invalid CategoryId.");
-
-        var imagePath = await SaveImageAsync(dto.Image);
-
-        plant.CategoryId = dto.CategoryId;
-        plant.PlantName = dto.PlantName;
-        plant.Description = dto.Description;
-        plant.Price = dto.Price;
-        plant.StockQuantity = dto.StockQuantity;
-        if (!string.IsNullOrWhiteSpace(imagePath))
+        try
         {
-            plant.ImageUrl = imagePath;
-        }
-        plant.Status = dto.Status;
+            if (!TryGetNurseryId(out var nurseryId))
+                return Unauthorized("Invalid nursery token.");
 
-        await _plantRepo.UpdateAsync(plant);
-        return Ok(plant);
+            var existingPlant = await _plantRepo.GetByIdAsync(id);
+
+            if (existingPlant == null)
+                return NotFound("Plant not found.");
+
+            if (existingPlant.NurseryId != nurseryId)
+                return Unauthorized("You can only modify your own plants.");
+
+            if (dto.CategoryId <= 0)
+                return BadRequest("CategoryId is required.");
+            if (string.IsNullOrWhiteSpace(dto.PlantName))
+                return BadRequest("PlantName is required.");
+            if (dto.Price <= 0)
+                return BadRequest("Price must be greater than zero.");
+            if (dto.StockQuantity < 0)
+                return BadRequest("Stock quantity cannot be negative.");
+
+            var category = await _categoryRepo.GetByIdAsync(dto.CategoryId);
+            if (category == null)
+                return BadRequest("Invalid CategoryId.");
+
+            _logger.LogInformation(
+                "UpdatePlant image phase. PlantId: {PlantId}, HasImage: {HasImage}, FileName: {FileName}, FileSize: {FileSize}",
+                id,
+                dto.Image != null,
+                dto.Image?.FileName,
+                dto.Image?.Length);
+
+            var imagePath = await SaveImageAsync(dto.Image);
+
+            existingPlant.CategoryId = dto.CategoryId;
+            existingPlant.PlantName = dto.PlantName.Trim();
+            existingPlant.Description = dto.Description?.Trim();
+            existingPlant.Price = dto.Price;
+            existingPlant.StockQuantity = dto.StockQuantity;
+            if (!string.IsNullOrWhiteSpace(imagePath))
+            {
+                existingPlant.ImageUrl = imagePath;
+            }
+            existingPlant.Status = string.IsNullOrWhiteSpace(dto.Status) ? existingPlant.Status : dto.Status;
+
+            _logger.LogInformation(
+                "Before SaveChanges. PlantId: {PlantId}, CategoryId: {CategoryId}, ImageUrl: {ImageUrl}",
+                existingPlant.PlantId,
+                existingPlant.CategoryId,
+                existingPlant.ImageUrl);
+
+            var beforeState = _dbContext.Entry(existingPlant).State;
+            _logger.LogInformation("Repository update phase (before). PlantId: {PlantId}, TrackingState: {TrackingState}", existingPlant.PlantId, beforeState);
+
+            await _plantRepo.UpdateAsync(existingPlant);
+
+            var afterState = _dbContext.Entry(existingPlant).State;
+            _logger.LogInformation("Repository update phase (after). PlantId: {PlantId}, TrackingState: {TrackingState}", existingPlant.PlantId, afterState);
+
+            return Ok(new
+            {
+                message = "Updated Successfully",
+                plantId = existingPlant.PlantId
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "UpdatePlant failed for plant {PlantId}. Message: {Message}. Inner: {Inner}", id, ex.Message, ex.InnerException?.Message);
+            return StatusCode(500, new
+            {
+                error = ex.Message,
+                inner = ex.InnerException?.Message
+            });
+        }
     }
 
     [HttpDelete("{id:int}")]

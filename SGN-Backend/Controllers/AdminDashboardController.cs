@@ -32,7 +32,9 @@ public class AdminDashboardController : ControllerBase
         var totalNurseries = await _dbContext.Nurseries.CountAsync();
         var totalOrders = await _dbContext.Orders.CountAsync();
         var totalPlants = await _dbContext.Plants.CountAsync();
-        var successfulOrders = await _dbContext.Orders.CountAsync(o => o.OrderStatus == "Successful");
+        var successfulOrders = await _dbContext.Orders.CountAsync(o =>
+            o.OrderStatus != null &&
+            o.OrderStatus.Trim().ToLower() == "completed");
         var cancelledOrders = await _dbContext.Orders.CountAsync(o => o.OrderStatus == "Cancelled");
         var pendingOrders = await _dbContext.Orders.CountAsync(o => o.OrderStatus == "Pending");
 

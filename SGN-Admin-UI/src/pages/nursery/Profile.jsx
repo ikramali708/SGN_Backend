@@ -51,7 +51,10 @@ export default function NurseryProfile() {
     setError('');
     setSuccess('');
     try {
-      await api.post('/api/nursery/profile/change-password', password);
+      await api.put('/api/nursery/change-password', {
+        currentPassword: password.currentPassword,
+        newPassword: password.newPassword,
+      });
       setPassword({ currentPassword: '', newPassword: '' });
       setSuccess('Password changed successfully.');
     } catch (e) {

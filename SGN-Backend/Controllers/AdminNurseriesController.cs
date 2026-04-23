@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SGN.Data.Context;
 using SGN.Domain.Interfaces;
 using SGN_Backend.DTOs;
 
@@ -16,10 +18,12 @@ namespace SGN_Backend.Controllers;
 public class AdminNurseriesController : ControllerBase
 {
     private readonly INurseryRepository _nurseryRepo;
+    private readonly NurseryDbContext _context;
 
-    public AdminNurseriesController(INurseryRepository nurseryRepo)
+    public AdminNurseriesController(INurseryRepository nurseryRepo, NurseryDbContext context)
     {
         _nurseryRepo = nurseryRepo;
+        _context = context;
     }
 
     /// <summary>
@@ -29,6 +33,10 @@ public class AdminNurseriesController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<AdminNurseryListItemDto>>> GetNurseries([FromQuery] string? search)
     {
         var all = (await _nurseryRepo.GetAllAsync()).ToList();
+        var plantsByNursery = await _context.Plants
+            .GroupBy(p => p.NurseryId)
+            .Select(g => new { NurseryId = g.Key, TotalPlants = g.Count() })
+            .ToDictionaryAsync(x => x.NurseryId, x => x.TotalPlants);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -52,6 +60,7 @@ public class AdminNurseriesController : ControllerBase
                 n.Phone,
                 n.Address,
                 n.City,
+                plantsByNursery.TryGetValue(n.NurseryId, out var totalPlants) ? totalPlants : 0,
                 n.ApprovalStatus,
                 n.Status,
                 n.CreatedAt))
